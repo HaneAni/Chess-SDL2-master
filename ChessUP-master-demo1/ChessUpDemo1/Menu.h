@@ -6,7 +6,6 @@
 #ifndef MENU_H
 #define MENU_H
 
-//#include <string>
 
 enum class MenuSprite
 {
@@ -18,7 +17,7 @@ enum class MenuSprite
     MENU_SPRITE_SAVE,
     MENU_SPRITE_LOAD,
     MENU_SPRITE_MAIN_MENU,
-    MENU_SPRITE_TOTAL = 8
+    MENU_SPRITE_TOTAL
 };
 
 class Menu

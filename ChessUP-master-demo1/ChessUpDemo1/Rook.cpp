@@ -7,7 +7,7 @@ Rook::Rook(bool isWhite, int x_position, int y_position)
     this->x_Position_ = x_position;
     this->y_Position_ = y_position;
     isAlive = true;
-    pieceValue_ = 2;
+    pieceValue_ = 5;
 }
 
 Rook::~Rook()

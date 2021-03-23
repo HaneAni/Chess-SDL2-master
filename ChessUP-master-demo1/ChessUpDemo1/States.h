@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include "GameState.h"
 
+
 enum class PieceStatus {EMPTY, ENEMY, ALLY};
 enum class GameResult {WHITE_WINS, BLACK_WINS, DRAW, NOT_END};
 enum class Level {EASY, MEDIUM, HARD};
@@ -53,13 +54,6 @@ public:
     // Check the winner
     GameResult checkWhoWon();
 
-    /// Chức năng phát chuyển động tốt nhất của màu sắc của mảnh được chuyển cho nó (theo Mức độ khó. Khó, trung bình, dễ)
-    void playBestMove(bool, Level);
-    /// Hàm cập nhật các chuyển động tốt nhất cho các miếng trắng và đen.
-    void updateBestMoves(void);
-    /// Function receives a piece and returns the best move for the piece. If an x, y -1 and -1 position is returned, the piece cannot move (there are no moves for it)
-    PieceValue getPieceBestMove(Piece* );
-
     // Save game mode
     void saveGame(GameMode);
     // Load game mode
@@ -83,8 +77,10 @@ private:
     void setPawnEnemies(bool, Piece* , int, int);
     // Kill the enemy piece in position x,y
     void eatPiece(int, int);
-    // Checks if pawn goes to the end of the chess board, it can transform to any piece except king
-    void pawnTransform(Piece* piece);
+    // Checks if pawn goes to the end of the chess board, it can transform to queen
+    void pawnTransform(Piece*);
+    // King is allowed to make a special move, known as castling
+    bool isKingCastling(Piece*, int, int);
 
 };
 

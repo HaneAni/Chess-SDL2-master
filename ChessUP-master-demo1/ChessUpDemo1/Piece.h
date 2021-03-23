@@ -28,8 +28,6 @@ public:
     Piece();
     ~Piece();
 
-    int pieceValue_ = -1;
-
     // Returns the name of the part (identified by an enum)
     PieceName getName() {return name;}
     // Returns true if it is white, false if it is black
@@ -50,12 +48,18 @@ public:
 
     // Returns true if movement is possible, false otherwise.
     virtual bool isMovementPossible(int, int);
-    /// Pawn's private variable arrow
+    // Pawn's private variable arrow
     virtual void setPawnEnemy(bool, bool);
+    // King is allowed to make a special move, known as castling
+    virtual bool kingCastling(int, int);
+
+    bool isKingCastling[4];
 
 protected:
     // Defines what the piece is
     PieceName name;
+    // Defines what the value of piece
+    int pieceValue_;
 
     // Defines the color of the piece. NOTE: White pieces that start the game and on bottom position
     bool isWhite;

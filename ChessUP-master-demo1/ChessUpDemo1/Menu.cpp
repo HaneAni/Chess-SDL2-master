@@ -53,7 +53,6 @@ void Menu::handleEvent(SDL_Event* e, GameState* gm)
                     break;
                 case MenuSprite::MENU_SPRITE_CONTINUE :
                     gm->isPause = 0;
-                    //gm->setGameState(GameMode::GAME_MODE_CONTINUE);
                     break;
                 case MenuSprite::MENU_SPRITE_SAVE :
                     gm->isPause = 0;
@@ -67,8 +66,11 @@ void Menu::handleEvent(SDL_Event* e, GameState* gm)
                     gm->isPause = 0;
                     gm->setGameState(GameMode::GAME_MODE_MAIN_MENU);
                     break;
+                default:
+                    break;
                 }
-                //mCurrentSprite = BUTTON_SPRITE_SAVE;
+                break;
+            default:
                 break;
             }
         }
@@ -78,9 +80,10 @@ void Menu::handleEvent(SDL_Event* e, GameState* gm)
 void Menu::render()
 {
     // Show current button sprite
-    g_MenuSpriteSheetTexture.render(mPosition_.x, mPosition_.y, &(g_SpriteClips[(int) mCurrentSprite_]));
+    t_MenuSpriteSheetTexture.render(mPosition_.x, mPosition_.y, &(g_SpriteClips[(int) mCurrentSprite_]));
 
-    if(check == 1){
-        blackPieces[(int) PieceName::KNIGHT].render(mPosition_.x + MENU_WIDTH/2 - 40 ,mPosition_.y);
+    if(check == 1)
+    {
+        t_BlackPieces[(int) PieceName::KNIGHT].render(mPosition_.x + MENU_WIDTH/2 - 40 ,mPosition_.y);
     }
 }

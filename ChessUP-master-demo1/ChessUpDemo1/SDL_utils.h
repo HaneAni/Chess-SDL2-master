@@ -4,6 +4,9 @@
 #include <iostream>
 #include <SDL.h>
 
+//#define LAB
+//#define BOARD
+
 //*****************************************************
 // Các hàm chung về khởi tạo và huỷ SDL
 

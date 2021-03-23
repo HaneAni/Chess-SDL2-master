@@ -16,24 +16,27 @@ SDL_Event e;
 Menu g_Menu[ TOTAL_MENU ];
 
 /// Menu sprites
-SDL_Rect g_SpriteClips[(int) MenuSprite::MENU_SPRITE_TOTAL ];
-Texture g_CheckTexture;
-Texture g_MenuSpriteSheetTexture;
+SDL_Rect g_SpriteClips[ TOTAL_MENU ];
+Texture t_MenuSpriteSheetTexture;
 
 /// Scene textures
-Texture g_Board;
-Texture whitePieces[7];
-Texture blackPieces[7];
-//Texture gBishop;
-Texture possibleMoves;
-Texture pieceSelected;
-//Texture bestMove;
-Texture endGame[3];
-//Texture selection;
+Texture t_Board;
+Texture t_MainMenu;
+Texture t_Background;
+Texture t_WhitePieces[7];
+Texture t_BlackPieces[7];
+Texture t_PossibleMoves;
+Texture t_PieceSelected;
+Texture t_EndGame[3];
 
 
 ChessBoard::ChessBoard()
 {
+    x_board_ = (SCREEN_WIDTH - CELL_SIZE * 8) / 2;
+    y_board_ = (SCREEN_HEIGHT - CELL_SIZE * 8) / 2;
+
+    focus_ = {-1, -1};
+    focusedPiece_ = nullptr;
 }
 
 ChessBoard::~ChessBoard()
@@ -51,73 +54,79 @@ bool ChessBoard::loadImage()
     bool success = true;
 
     // Loads the texture
-    if(!g_Board.loadFromFile(chess_board))
+    if(!t_Board.loadFromFile(chess_board))
         success = false;
 
-    if(!pieceSelected.loadFromFile(piece_selected))
+    if(!t_MainMenu.loadFromFile(main_menu))
         success = false;
 
-    if(!possibleMoves.loadFromFile(possible_moves))
+    if(!t_Background.loadFromFile(chess_background))
+        success = false;
+
+    if(!t_PieceSelected.loadFromFile(piece_selected))
+        success = false;
+
+    if(!t_PossibleMoves.loadFromFile(possible_moves))
         success = false;
 
     // End game textures
     // White wins
-    if(!endGame[(int) GameResult::WHITE_WINS].loadFromFile(white_win))
+    if(!t_EndGame[(int) GameResult::WHITE_WINS].loadFromFile(white_win))
         success = false;
 
     // Black wins
-    if(!endGame[(int) GameResult::BLACK_WINS].loadFromFile(black_win))
+    if(!t_EndGame[(int) GameResult::BLACK_WINS].loadFromFile(black_win))
         success = false;
 
     // Draw
-    if(!endGame[(int) GameResult::DRAW].loadFromFile(draw))
+    if(!t_EndGame[(int) GameResult::DRAW].loadFromFile(draw))
         success = false;
 
     // Chess pieces
 
     // White pieces
 
-    if(!whitePieces[(int) PieceName::KING].loadFromFile(king_white))
+    if(!t_WhitePieces[(int) PieceName::KING].loadFromFile(king_white))
         success = false;
 
-    if(!whitePieces[(int) PieceName::QUEEN].loadFromFile(queen_white))
+    if(!t_WhitePieces[(int) PieceName::QUEEN].loadFromFile(queen_white))
         success = false;
 
-    if(!whitePieces[(int) PieceName::BISHOP].loadFromFile(bishop_white))
+    if(!t_WhitePieces[(int) PieceName::BISHOP].loadFromFile(bishop_white))
         success = false;
 
-    if(!whitePieces[(int) PieceName::KNIGHT].loadFromFile(knight_white))
+    if(!t_WhitePieces[(int) PieceName::KNIGHT].loadFromFile(knight_white))
         success = false;
 
-    if(!whitePieces[(int) PieceName::ROOK].loadFromFile(rook_white))
+    if(!t_WhitePieces[(int) PieceName::ROOK].loadFromFile(rook_white))
         success = false;
 
-    if(!whitePieces[(int) PieceName::PAWN].loadFromFile(pawn_white))
+    if(!t_WhitePieces[(int) PieceName::PAWN].loadFromFile(pawn_white))
         success = false;
 
     // Black pieces
 
-    if(!blackPieces[(int) PieceName::KING].loadFromFile(king_black))
+    if(!t_BlackPieces[(int) PieceName::KING].loadFromFile(king_black))
         success = false;
 
-    if(!blackPieces[(int) PieceName::QUEEN].loadFromFile(queen_black))
+    if(!t_BlackPieces[(int) PieceName::QUEEN].loadFromFile(queen_black))
         success = false;
 
-    if(!blackPieces[(int) PieceName::BISHOP].loadFromFile(bishop_black))
+    if(!t_BlackPieces[(int) PieceName::BISHOP].loadFromFile(bishop_black))
         success = false;
 
-    if(!blackPieces[(int) PieceName::KNIGHT].loadFromFile(knight_black))
+    if(!t_BlackPieces[(int) PieceName::KNIGHT].loadFromFile(knight_black))
         success = false;
 
-    if(!blackPieces[(int) PieceName::ROOK].loadFromFile(rook_black))
+    if(!t_BlackPieces[(int) PieceName::ROOK].loadFromFile(rook_black))
         success = false;
 
-    if(!blackPieces[(int) PieceName::PAWN].loadFromFile(pawn_black))
+    if(!t_BlackPieces[(int) PieceName::PAWN].loadFromFile(pawn_black))
         success = false;
 
     // Loads menu sprite
 
-    if(!g_MenuSpriteSheetTexture.loadFromFile(menu_box))
+    if(!t_MenuSpriteSheetTexture.loadFromFile(menu_box))
     {
         logSDLError(std::cout, "Failed to load menu sprite texture", true);
         success = false;
@@ -125,7 +134,7 @@ bool ChessBoard::loadImage()
     else
     {
         // Sets sprite
-        for(int i = 0; i < (int) MenuSprite::MENU_SPRITE_TOTAL; i++)
+        for(int i = 0; i < TOTAL_MENU; i++)
         {
             g_SpriteClips[ i ].x = 0;
             g_SpriteClips[ i ].y = i * MENU_HEIGHT;
@@ -134,14 +143,14 @@ bool ChessBoard::loadImage()
         }
 
         // Sets menu position
-        g_Menu[ 0 ].setPosition(0, 0);
-        g_Menu[ 1 ].setPosition(MENU_WIDTH, 0);
-        g_Menu[ 2 ].setPosition(0, MENU_HEIGHT);
-        g_Menu[ 3 ].setPosition(MENU_WIDTH, MENU_HEIGHT);
-        g_Menu[ 4 ].setPosition(0, 0);
-        g_Menu[ 5 ].setPosition(MENU_WIDTH, 0);
-        g_Menu[ 6 ].setPosition(0, MENU_HEIGHT);
-        g_Menu[ 7 ].setPosition(MENU_WIDTH, MENU_HEIGHT);
+        g_Menu[ 0 ].setPosition(x_board_ - BOARD_PADDING, y_board_ - BOARD_PADDING);
+        g_Menu[ 1 ].setPosition(x_board_ - BOARD_PADDING + MENU_WIDTH, y_board_ - BOARD_PADDING);
+        g_Menu[ 2 ].setPosition(x_board_ - BOARD_PADDING, y_board_ - BOARD_PADDING + MENU_HEIGHT);
+        g_Menu[ 3 ].setPosition(x_board_ - BOARD_PADDING + MENU_WIDTH, y_board_ - BOARD_PADDING + MENU_HEIGHT);
+        g_Menu[ 4 ].setPosition(x_board_ - BOARD_PADDING, y_board_ - BOARD_PADDING);
+        g_Menu[ 5 ].setPosition(x_board_ - BOARD_PADDING + MENU_WIDTH, y_board_ - BOARD_PADDING);
+        g_Menu[ 6 ].setPosition(x_board_ - BOARD_PADDING, y_board_ - BOARD_PADDING + MENU_HEIGHT);
+        g_Menu[ 7 ].setPosition(x_board_ - BOARD_PADDING + MENU_WIDTH, y_board_ - BOARD_PADDING + MENU_HEIGHT);
     }
 
     if(!success)
@@ -153,13 +162,23 @@ bool ChessBoard::loadImage()
 void ChessBoard::close()
 {
     // Deallocates memory
-    g_Board.freeTexture();
+    t_MenuSpriteSheetTexture.freeTexture();
+    t_Board.freeTexture();
+    t_MainMenu.freeTexture();
+    t_Background.freeTexture();
+    t_PossibleMoves.freeTexture();
+    t_PieceSelected.freeTexture();
+
+    for(int i = 0; i < 3; i++)
+    {
+        t_EndGame[i].freeTexture();
+    }
 
     // Free chess pieces
     for(int i = 0; i < 7; i++)
     {
-        blackPieces[i].freeTexture();
-        whitePieces[i].freeTexture();
+        t_BlackPieces[i].freeTexture();
+        t_WhitePieces[i].freeTexture();
     }
 
     // Destroy window
@@ -173,38 +192,83 @@ void ChessBoard::close()
     SDL_Quit();
 }
 
+void ChessBoard::renderChessBoard()
+{
+#ifndef BOARD
+    // Rect draw padding of board
+    SDL_Rect outRect;
+    // Set padding of board
+    outRect.x = x_board_ - BOARD_PADDING;
+    outRect.y = y_board_ - BOARD_PADDING;
+    outRect.w = CELL_SIZE * 8 + BOARD_PADDING * 2;
+    outRect.h = CELL_SIZE * 8 + BOARD_PADDING * 2;
+    // Set padding color
+    SDL_SetRenderDrawColor(g_Renderer, 64, 64, 64, 255);
+    // Render padding of board
+    SDL_RenderFillRect(g_Renderer, &outRect);
+
+    // Rect draw each cell
+    SDL_Rect cell;
+    for (int iRow = 0; iRow < 8; iRow++)
+    {
+        for (int iCol = 0; iCol < 8; iCol++)
+        {
+            // Set one cell
+            cell.x = x_board_ + CELL_SIZE * iCol;
+            cell.y = y_board_ + CELL_SIZE * iRow;
+            cell.w = CELL_SIZE;
+            cell.h = CELL_SIZE;
+
+            // Set color of each cell
+            if((iRow + iCol) % 2 == 0)
+                SDL_SetRenderDrawColor(g_Renderer, 255, 105, 180, 255);
+            else
+                SDL_SetRenderDrawColor(g_Renderer, 255, 255, 255, 255);
+
+            // Render one cell
+            SDL_RenderFillRect(g_Renderer, &cell);
+        }
+    }
+#else
+    t_Board.render(x_board_ - BOARD_PADDING, y_board_ - BOARD_PADDING, BOARD_HEIGHT, BOARD_WIDTH);
+#endif // BOARD
+}
+
 void ChessBoard::updateFocus(int x, int y)
 {
     // Check outside the edges of the board
-    if( (x < BOARD_PADDING) || (x > BOARD_WIDTH - BOARD_PADDING) || (y < BOARD_PADDING) || (y > BOARD_HEIGHT - BOARD_PADDING) )
+    if( (x < x_board_) || (x > x_board_ + CELL_SIZE * 8) ||
+        (y < y_board_) || (y > y_board_ + CELL_SIZE * 8) )
     {
         focus_.x = -1;
         focus_.y = -1;
         return;
     }
-    focus_.x = (int) (x - BOARD_PADDING) / CELL_SIZE;
-    focus_.y = (int) (y - BOARD_PADDING) / CELL_SIZE;
+    focus_.x = (int) (x - x_board_) / CELL_SIZE;
+    focus_.y = (int) (y - y_board_) / CELL_SIZE;
 }
 
-int ChessBoard::indexToPixel(int index)
+int ChessBoard::indexToPixel(int index, bool xORy)
 {
     if( (index < 0) || (index > 7) )
     {
         logSDLError(std::cout, "Invalid index", true);
         return -1;
     }
-    return (index * CELL_SIZE + BOARD_PADDING);
+    if(xORy)
+        return (index * CELL_SIZE + x_board_);
+    else
+        return (index * CELL_SIZE + y_board_);
 }
 
-void ChessBoard::renderPieceOnBoard(PieceName piece, int color, int x_pos, int y_pos)
+void ChessBoard::renderPieceOnBoard(PieceName piece, bool color, int x_pos, int y_pos)
 {
     if( (x_pos < 0) || (y_pos < 0) )
         return;
-
     if(color)
-        whitePieces[(int) piece].render(indexToPixel(x_pos), indexToPixel(y_pos));
+        t_WhitePieces[(int) piece].render(indexToPixel(x_pos, true), indexToPixel(y_pos, false), CELL_SIZE, CELL_SIZE);
     else
-        blackPieces[(int) piece].render(indexToPixel(x_pos), indexToPixel(y_pos));
+        t_BlackPieces[(int) piece].render(indexToPixel(x_pos, true), indexToPixel(y_pos, false), CELL_SIZE, CELL_SIZE);
 }
 
 void ChessBoard::renderAllPieces(States* states)
@@ -212,10 +276,10 @@ void ChessBoard::renderAllPieces(States* states)
     for(int i = 0; i < 16; i++)
     {
         // Render white pieces
-        renderPieceOnBoard(states->whitePieces_[i]->getName(), 1, states->whitePieces_[i]->getPositionX(), states->whitePieces_[i]->getPositionY());
+        renderPieceOnBoard(states->whitePieces_[i]->getName(), true, states->whitePieces_[i]->getPositionX(), states->whitePieces_[i]->getPositionY());
 
         // Render black pieces
-        renderPieceOnBoard(states->blackPieces_[i]->getName(), 0, states->blackPieces_[i]->getPositionX(), states->blackPieces_[i]->getPositionY());
+        renderPieceOnBoard(states->blackPieces_[i]->getName(), false, states->blackPieces_[i]->getPositionX(), states->blackPieces_[i]->getPositionY());
     }
 }
 
@@ -230,28 +294,22 @@ bool ChessBoard::checkMovement(States* states)
 
 void ChessBoard::renderPossibleMoves(States *states)
 {
-    int x = 0, y = 0;
     if(focusedPiece_)
     {
         if(focusedPiece_->getName() != PieceName::EMPTY)
         {
-            for(int i = 0; i < 8; i++)
+            for(int iRow = 0; iRow < 8; iRow++)
             {
-                for(int j = 0; j < 8; j++)
+                for(int iCol = 0; iCol < 8; iCol++)
                 {
-                    if(states->isPositionValid(focusedPiece_, i, j))
+                    if(states->isPositionValid(focusedPiece_, iRow, iCol))
                     {
-                        possibleMoves.render(indexToPixel(i),indexToPixel(j));
+                        t_PossibleMoves.render(indexToPixel(iRow, true), indexToPixel(iCol, false), CELL_SIZE, CELL_SIZE);
                     }
                 }
             }
         }
     }
-}
-
-void ChessBoard::renderBestMove(States *states)
-{
-    /******************************************************************* todo *******************************************************************/
 }
 
 bool ChessBoard::choosePieceTurn(GameState *gm, States* states)
@@ -263,7 +321,6 @@ bool ChessBoard::choosePieceTurn(GameState *gm, States* states)
 void ChessBoard::editBoard(GameState *gm, States* states)
 {
     bool done = false;
-    Piece *currentPiece = nullptr;
     states->killAllPieces();
     int indexPiece = 1;
     bool isWhite = false;
@@ -332,18 +389,24 @@ void ChessBoard::editBoard(GameState *gm, States* states)
             SDL_SetRenderDrawColor(g_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(g_Renderer);
 
+            // Render chess background
+            t_Background.renderBackground();
             // Render board
-            g_Board.render(0, 0);
+            renderChessBoard();
 
             if(isWhite)
-                whitePieces[(int) states->whitePieces_[indexPiece]->getName()].render(x, y);
+                t_WhitePieces[(int) states->whitePieces_[indexPiece]->getName()].render(x, y);
             else
-                blackPieces[(int) states->blackPieces_[indexPiece]->getName()].render(x, y);
+                t_BlackPieces[(int) states->blackPieces_[indexPiece]->getName()].render(x, y);
 
             renderAllPieces(states);
 
             // Update screen
+#ifndef LAB
             SDL_RenderPresent(g_Renderer);
+#else
+            SDL_UpdateWindowSurface(g_Window);
+#endif // LAB
         }
     }
     return;

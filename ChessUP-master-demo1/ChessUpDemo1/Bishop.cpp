@@ -7,7 +7,7 @@ Bishop::Bishop(bool isWhite, int x_position, int y_position)
     this->x_Position_ = x_position;
     this->y_Position_ = y_position;
     isAlive = true;
-    pieceValue_ = 4;
+    pieceValue_ = 3;
 }
 
 Bishop::~Bishop()

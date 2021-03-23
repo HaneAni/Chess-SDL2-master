@@ -7,7 +7,7 @@ King::King(bool isWhite, int x_position, int y_position)
     this->x_Position_ = x_position;
     this->y_Position_ = y_position;
     isAlive = true;
-    pieceValue_ = 6;
+    pieceValue_ = 10000;
 }
 
 King::~King()
@@ -32,6 +32,17 @@ bool King::isMovementPossible(int ix, int iy)
             if(x_movement == 0 || y_movement == 0)
                 return true;
         }
+    }
+    return false;
+}
+
+bool King::kingCastling(int ix, int iy)
+{
+    // Piece has to be on the board and be alive
+    if((ix >= 0 && ix < 8) && (iy >= 0 && iy < 8) && isAlive)
+    {
+        if(x_Position_ == 4 && (ix == 2 || ix == 6) && (y_Position_ == iy))
+            return true;
     }
     return false;
 }

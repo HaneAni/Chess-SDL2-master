@@ -8,7 +8,6 @@
 #ifndef CHESSBOARD_H
 #define CHESSBOARD_H
 
-//#include <string>
 
 class ChessBoard
 {
@@ -20,20 +19,21 @@ public:
     bool loadImage();
     void close();
 
+    // Render chess board
+    void renderChessBoard();
     // Update clicked position
     void updateFocus(int x, int y);
     // From the index returns the position in pixels of the board
-    int indexToPixel(int index);
+    int indexToPixel(int index, bool xORy);
     // Color = 1 = white, color = 0 = black
     // Render piece on the board
-    void renderPieceOnBoard(PieceName piece, int color, int ix, int iy);
+    void renderPieceOnBoard(PieceName piece, bool color, int ix, int iy);
+    // Render all the piece on the board
     void renderAllPieces(States* states);
     // Check if there is any move, condition: use move Piece if the last clicked piece is not empty
     bool checkMovement(States* states);
     // Render posible moves
     void renderPossibleMoves(States *states);
-    // Render best move
-    void renderBestMove(States *states);
     // Chooses piece turn
     bool choosePieceTurn(GameState *gm, States* states);
     // Edits the board
@@ -42,9 +42,19 @@ public:
     // Matrix of board
     SDL_Rect mBoard[8][8];
     // Position clicked
-    SDL_Point focus_ = {-1,-1};
+    SDL_Point focus_;
     // Last piece clicked
-    Piece* focusedPiece_ = nullptr;
+    Piece* focusedPiece_;
+
+    void setXboard(int x) {x_board_ = x;}
+    int getXboard() {return x_board_;}
+
+    void setYboard(int y) {x_board_ = y;}
+    int getYboard() {return y_board_;}
+
+private:
+    int x_board_;
+    int y_board_;
 
 };
 

@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 
     	// Release resources and end sdl
         chessBoard->close();
-
-	    return 0;
     }
+    return 0;
 }

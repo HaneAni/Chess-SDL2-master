@@ -22,6 +22,8 @@ public:
 
     // Check all movement possible of king
     bool isMovementPossible(int, int);
+    // King is allowed to make a special move, known as castling
+    bool kingCastling(int, int);
 
     using Piece::getName;
     using Piece::getColor;

@@ -4,6 +4,7 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
+
 enum class GameMode
 {
     GAME_MODE_PVP,
@@ -25,11 +26,9 @@ public:
     GameState();
     ~GameState();
 
-    int isPause = 0;
+    int isPause;
 
     void startGameState(GameMode playMode);
-
-    void renderPauseMenu();
 
     GameMode getGameState() {return gameState_;}
 
@@ -42,6 +41,7 @@ private:
     void renderPVP();
     void renderCPU();
     void renderChessupMode();
+    void renderPauseMenu();
 
 };
 

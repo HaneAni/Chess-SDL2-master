@@ -123,22 +123,23 @@ PieceStatus States::isInTheSpot(Piece* piece, int x_pos, int y_pos)
 
 bool States::isPositionValid(Piece* piece, int x_pos, int y_pos)
 {
-    PieceStatus obstacle;
+    // Set the pawn's enemy
+    setPawnEnemies(true, piece, -1, -1);
+    PieceStatus is_In_The_Spot = isInTheSpot(piece, x_pos, y_pos);
+
     if(piece->getName() == PieceName::KING)
     {
         if(isCheck(piece->getColor(), x_pos, y_pos))
             return false;
+        if(isKingCastling(piece, x_pos, y_pos))
+            return true;
     }
-    // Set the pawn's enemy
-    setPawnEnemies(true, piece, -1, -1);
-    obstacle = isInTheSpot(piece, x_pos, y_pos);
-
-    if(piece->isMovementPossible(x_pos, y_pos) && isInTheWay(piece, x_pos, y_pos) == PieceStatus::EMPTY && obstacle != PieceStatus::ALLY)
+    if(piece->isMovementPossible(x_pos, y_pos) && isInTheWay(piece, x_pos, y_pos) == PieceStatus::EMPTY && is_In_The_Spot != PieceStatus::ALLY)
     {
         // Remove the pawn's enemy
         setPawnEnemies(false, piece, -1, -1);
 
-        if(piece->getName() == PieceName::PAWN && obstacle == PieceStatus::ENEMY)
+        if(piece->getName() == PieceName::PAWN && is_In_The_Spot == PieceStatus::ENEMY)
         {
             if(piece->getPositionX() - x_pos != 0)
                 return true;
@@ -156,16 +157,28 @@ bool States::isMove(Piece* piece, int x_pos, int y_pos)
     // Set the pawn's enemy
     setPawnEnemies(true, piece, -1, -1);
     PieceStatus is_In_The_Spot = isInTheSpot(piece, x_pos, y_pos);
-    if(piece->isMovementPossible(x_pos, y_pos) &&
-       isInTheWay(piece, x_pos, y_pos) == PieceStatus::EMPTY &&
-       is_In_The_Spot != PieceStatus::ALLY)
+    if(isPositionValid(piece, x_pos, y_pos) && isInTheWay(piece, x_pos, y_pos) == PieceStatus::EMPTY &&
+       is_In_The_Spot != PieceStatus::ALLY && pieceTurn == piece->getColor())
     {
         // Remove the pawn's enemy
         setPawnEnemies(false, piece, -1, -1);
 
         if(piece->getName() == PieceName::KING)
+        {
             if(isCheck(piece->getColor(), x_pos, y_pos))
                 return false;
+            if(isKingCastling(piece, x_pos, y_pos))
+            {
+                if(x_pos == 6 && y_pos == 0)
+                    blackPieces_[15]->setPosition(5, 0);
+                else if(x_pos == 2 && y_pos == 0)
+                    blackPieces_[8]->setPosition(3, 0);
+                else if(x_pos == 2 && y_pos == 7)
+                    whitePieces_[8]->setPosition(3, 7);
+                else if(x_pos == 6 && y_pos == 7)
+                    whitePieces_[15]->setPosition(5, 7);
+            }
+        }
 
         if(piece->getName() == PieceName::PAWN)
             if(is_In_The_Spot == PieceStatus::ENEMY && (x_pos - piece->getPositionX() == 0))
@@ -277,21 +290,6 @@ GameResult States::checkWhoWon()
     return GameResult::NOT_END;
 }
 
-void States::playBestMove(bool, Level)
-{
-    /******************************************************************* todo *******************************************************************/
-}
-
-void States::updateBestMoves(void)
-{
-    /******************************************************************* todo *******************************************************************/
-}
-
-PieceValue States::getPieceBestMove(Piece* )
-{
-    /******************************************************************* todo *******************************************************************/
-}
-
 bool States::setPiece(Piece* piece, int x_pos, int y_pos)
 {
     // Piece has to be on the board
@@ -383,8 +381,8 @@ void States::eatPiece(int x_pos, int y_pos)
     {
         for(int j = 0; j < 16; j++)
         {
-            if(aux[i]->getPositionX() == x_pos && aux[i]->getPositionY() == y_pos)
-                aux[i]->setDead();
+            if(aux[j]->getPositionX() == x_pos && aux[j]->getPositionY() == y_pos)
+                aux[j]->setDead();
         }
         aux = blackPieces_;
     }
@@ -416,3 +414,27 @@ void States::pawnTransform(Piece* piece)
     }
 }
 
+bool States::isKingCastling(Piece* piece, int x_pos, int y_pos)
+{
+    if(piece->getName() == PieceName::KING)
+    {
+        if(piece->kingCastling(x_pos, y_pos) && isInTheSpot(piece, x_pos, y_pos) == PieceStatus::EMPTY)
+        {
+            if(!piece->getColor())
+            {
+                if(x_pos == 6 && piece->isKingCastling[0] && isInTheSpot(piece, 5, 0) == PieceStatus::EMPTY)
+                    return true;
+                if(x_pos == 2 && piece->isKingCastling[1] && isInTheSpot(piece, 3, 0) == PieceStatus::EMPTY && isInTheSpot(piece, 1, 0) == PieceStatus::EMPTY)
+                    return true;
+            }
+            else
+            {
+                if(x_pos == 2 && piece->isKingCastling[2] && isInTheSpot(piece, 3, 7) == PieceStatus::EMPTY && isInTheSpot(piece, 1, 7) == PieceStatus::EMPTY)
+                    return true;
+                if(x_pos == 6 && piece->isKingCastling[3] && isInTheSpot(piece, 5, 7) == PieceStatus::EMPTY)
+                    return true;
+            }
+        }
+    }
+    return false;
+}

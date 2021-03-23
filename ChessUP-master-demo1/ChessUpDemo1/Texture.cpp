@@ -75,6 +75,24 @@ void Texture::render(int x, int y, int w, int h)
     SDL_RenderCopy(g_Renderer, mTexture_, NULL, &renderQuad);
 }
 
+void Texture::renderBackground()
+{
+    int w = mWidth_;
+    int h = mHeight_;
+
+    if ((w * SCREEN_HEIGHT) > (SCREEN_WIDTH * h))
+    {
+        w = SCREEN_HEIGHT * w / h;
+        h = SCREEN_HEIGHT;
+    }
+    else
+    {
+        h = SCREEN_WIDTH * h / w;
+        w = SCREEN_WIDTH;
+    }
+    render((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2, w, h);
+}
+
 void Texture::freeTexture()
 {
     if(mTexture_ != nullptr)

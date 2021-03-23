@@ -1,7 +1,5 @@
 #include "SDL_utils.h"
 
-//#define LAB
-
 void logSDLError(std::ostream& os, const std::string &msg, bool fatal)
 {
     os << msg << " Error: " << SDL_GetError() << std::endl;
