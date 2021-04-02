@@ -29,15 +29,17 @@ public:
     ~Piece();
 
     // Returns the name of the part (identified by an enum)
-    PieceName getName() {return name;}
+    PieceName getName() {return name_;}
     // Returns true if it is white, false if it is black
-    bool getColor() {return isWhite;}
+    bool getColor() {return isWhite_;}
     // Returns True for alive piece, False for dead piece
-    bool getIsAlive() {return isAlive;}
+    bool getIsAlive() {return isAlive_;}
     // Returns the X position
     int getPositionX() {return x_Position_;}
     // Returns the Y position
     int getPositionY() {return y_Position_;}
+    // Returns the the value of piece
+    int getPieceValue() {return pieceValue_;}
 
     // Sets the X and Y position of the piece
     void setPosition(int, int);
@@ -53,23 +55,22 @@ public:
     // King is allowed to make a special move, known as castling
     virtual bool kingCastling(int, int);
 
-    bool isKingCastling[4];
-
 protected:
     // Defines what the piece is
-    PieceName name;
-    // Defines what the value of piece
-    int pieceValue_;
+    PieceName name_;
 
     // Defines the color of the piece. NOTE: White pieces that start the game and on bottom position
-    bool isWhite;
+    bool isWhite_;
     // Check piece alive or not
-    bool isAlive;
+    bool isAlive_;
 
     // Defines the position of the piece with X coordinate
     int x_Position_;
     // Defines the position of the piece with Y coordinate
     int y_Position_;
+
+    // Defines what the value of piece
+    int pieceValue_;
 
 };
 

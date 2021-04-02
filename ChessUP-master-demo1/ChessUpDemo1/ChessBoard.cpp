@@ -1,6 +1,8 @@
 #include "ChessBoard.h"
 #include "GameState.h"
 #include "States.h"
+#include "Piece.h"
+#include "Pawn.h"
 
 
 /// The window we'll be rendering to
@@ -29,6 +31,13 @@ Texture t_PossibleMoves;
 Texture t_PieceSelected;
 Texture t_EndGame[3];
 
+/// Stack save movement
+std::stack<int> x_position_stack;
+std::stack<int> y_position_stack;
+std::stack<int> index_stack;
+std::stack<bool> color_stack;
+std::stack<bool> kingCastling_stack;
+
 
 ChessBoard::ChessBoard()
 {
@@ -42,6 +51,8 @@ ChessBoard::ChessBoard()
 ChessBoard::~ChessBoard()
 {
 }
+
+/*********** General Function ***********/
 
 bool ChessBoard::init()
 {
@@ -192,6 +203,8 @@ void ChessBoard::close()
     SDL_Quit();
 }
 
+/*********** Render Function ***********/
+
 void ChessBoard::renderChessBoard()
 {
 #ifndef BOARD
@@ -221,7 +234,7 @@ void ChessBoard::renderChessBoard()
 
             // Set color of each cell
             if((iRow + iCol) % 2 == 0)
-                SDL_SetRenderDrawColor(g_Renderer, 255, 105, 180, 255);
+                SDL_SetRenderDrawColor(g_Renderer, 0, 128, 0, 255);
             else
                 SDL_SetRenderDrawColor(g_Renderer, 255, 255, 255, 255);
 
@@ -232,33 +245,6 @@ void ChessBoard::renderChessBoard()
 #else
     t_Board.render(x_board_ - BOARD_PADDING, y_board_ - BOARD_PADDING, BOARD_HEIGHT, BOARD_WIDTH);
 #endif // BOARD
-}
-
-void ChessBoard::updateFocus(int x, int y)
-{
-    // Check outside the edges of the board
-    if( (x < x_board_) || (x > x_board_ + CELL_SIZE * 8) ||
-        (y < y_board_) || (y > y_board_ + CELL_SIZE * 8) )
-    {
-        focus_.x = -1;
-        focus_.y = -1;
-        return;
-    }
-    focus_.x = (int) (x - x_board_) / CELL_SIZE;
-    focus_.y = (int) (y - y_board_) / CELL_SIZE;
-}
-
-int ChessBoard::indexToPixel(int index, bool xORy)
-{
-    if( (index < 0) || (index > 7) )
-    {
-        logSDLError(std::cout, "Invalid index", true);
-        return -1;
-    }
-    if(xORy)
-        return (index * CELL_SIZE + x_board_);
-    else
-        return (index * CELL_SIZE + y_board_);
 }
 
 void ChessBoard::renderPieceOnBoard(PieceName piece, bool color, int x_pos, int y_pos)
@@ -283,13 +269,17 @@ void ChessBoard::renderAllPieces(States* states)
     }
 }
 
-bool ChessBoard::checkMovement(States* states)
+void ChessBoard::renderOnePiece(int x_pos, int y_pos)
 {
-    bool move = false;
-    if(focusedPiece_ != nullptr)
-        if(focusedPiece_->getName() != PieceName::EMPTY)
-            move = states->isMove(focusedPiece_, focus_.x, focus_.y);
-    return move;
+#ifndef BOARD
+    // Set rect to render in
+    SDL_Rect rect = {x_pos, y_pos, CELL_SIZE, CELL_SIZE};
+
+    // Render rect on the board
+    SDL_RenderFillRect(g_Renderer, &rect);
+#else
+    t_PieceSelected.render(x_pos, y_pos, CELL_SIZE, CELL_SIZE);
+#endif // BOARD
 }
 
 void ChessBoard::renderPossibleMoves(States *states)
@@ -312,10 +302,149 @@ void ChessBoard::renderPossibleMoves(States *states)
     }
 }
 
+/*********** Other Function ***********/
+
+void ChessBoard::updateFocus(int x_pos, int y_pos)
+{
+    // Check outside the edges of the board
+    if( (x_pos < x_board_) || (x_pos > x_board_ + CELL_SIZE * 8) || (y_pos < y_board_) || (y_pos > y_board_ + CELL_SIZE * 8) )
+    {
+        focus_.x = -1;
+        focus_.y = -1;
+        return;
+    }
+    focus_.x = (int) (x_pos - x_board_) / CELL_SIZE;
+    focus_.y = (int) (y_pos - y_board_) / CELL_SIZE;
+}
+
+int ChessBoard::indexToPixel(int index, bool xORy)
+{
+    if( (index < 0) || (index > 7) )
+    {
+        logSDLError(std::cout, "Invalid index", true);
+        return -1;
+    }
+    if(xORy)
+        return (index * CELL_SIZE + x_board_);
+    else
+        return (index * CELL_SIZE + y_board_);
+}
+
 bool ChessBoard::choosePieceTurn(GameState *gm, States* states)
 {
     /******************************************************************* todo *******************************************************************/
     return true;
+}
+
+bool ChessBoard::checkMovement(States* states)
+{
+    int x_pos = -1, y_pos = -1;
+    Piece* piece;
+    bool move = false;
+
+    if(focusedPiece_ != nullptr)
+    {
+        // Get position of focused piece
+        x_pos = focusedPiece_->getPositionX();
+        y_pos = focusedPiece_->getPositionY();
+        piece = states->getPiece(focus_.x, focus_.y);
+        // Check focused piece can move or not
+        if(focusedPiece_->getName() != PieceName::EMPTY)
+            move = states->isMove(focusedPiece_, focus_.x, focus_.y);
+    }
+
+    if(move)
+    {
+        Piece **aux1;
+        Piece **aux2;
+        int index1 = -1, index2 = -1;
+
+        focusedPiece_->getColor() ? (aux1 = states->whitePieces_ , aux2 = states->blackPieces_) :
+                                    (aux1 = states->blackPieces_ , aux2 = states->whitePieces_);
+
+        // Find index of focused piece and eaten piece
+        for(int i = 0; i < 16; i++)
+        {
+            if(focusedPiece_ == aux1[i])
+            {
+                index1 = i;
+                break;
+            }
+        }
+        if(piece->getName() != PieceName::EMPTY)
+        {
+            for(int i = 0; i < 16; i++)
+            {
+                if(piece == aux2[i])
+                {
+                    index2 = i;
+                    break;
+                }
+            }
+        }
+
+        // Push focused piece into stack
+        index_stack.push(index1);
+        // Push focused piece color into stack
+        color_stack.push(focusedPiece_->getColor());
+        // Push old position into stack
+        x_position_stack.push(x_pos);
+        y_position_stack.push(y_pos);
+        // Push new position into stack
+        x_position_stack.push(focus_.x);
+        y_position_stack.push(focus_.y);
+
+        // Check if pawn transform
+        if(states->pawnTransform(focusedPiece_, focus_.x, focus_.y))
+        {
+            // If pawn transform push 99 into stack
+            index_stack.push(99);
+        }
+
+        // Check if king castling
+        if(focusedPiece_->getName() == PieceName::KING)
+        {
+            if((focus_.x == 2 || focus_.x == 6) && (focus_.y == 0 || focus_.y == 7) && states->undoKingCastling)
+            {
+                // If king castling push 100 to stack
+                index_stack.push(100);
+                kingCastling_stack.push(states->kingCastling[0]);
+                kingCastling_stack.push(states->kingCastling[1]);
+                kingCastling_stack.push(states->kingCastling[2]);
+                kingCastling_stack.push(states->kingCastling[3]);
+                states->undoKingCastling = false;
+            }
+            else
+            {
+                kingCastling_stack.push(states->kingCastling[0]);
+                kingCastling_stack.push(states->kingCastling[1]);
+                kingCastling_stack.push(states->kingCastling[2]);
+                kingCastling_stack.push(states->kingCastling[3]);
+            }
+        }
+        else if(focusedPiece_->getName() == PieceName::ROOK)
+        {
+            kingCastling_stack.push(states->kingCastling[0]);
+            kingCastling_stack.push(states->kingCastling[1]);
+            kingCastling_stack.push(states->kingCastling[2]);
+            kingCastling_stack.push(states->kingCastling[3]);
+        }
+
+        // Check if piece have been eaten
+        if(index2 != -1)
+        {
+            // Push into stack
+            index_stack.push(index2);
+            color_stack.push(piece->getColor());
+
+            x_position_stack.push(focus_.x);
+            y_position_stack.push(focus_.y);
+
+            x_position_stack.push(-1);
+            y_position_stack.push(-1);
+        }
+    }
+    return move;
 }
 
 void ChessBoard::editBoard(GameState *gm, States* states)
@@ -402,11 +531,7 @@ void ChessBoard::editBoard(GameState *gm, States* states)
             renderAllPieces(states);
 
             // Update screen
-#ifndef LAB
-            SDL_RenderPresent(g_Renderer);
-#else
-            SDL_UpdateWindowSurface(g_Window);
-#endif // LAB
+            updateScreen(g_Window, g_Renderer);
         }
     }
     return;

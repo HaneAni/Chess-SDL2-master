@@ -2,11 +2,11 @@
 
 Rook::Rook(bool isWhite, int x_position, int y_position)
 {
-    this->name = PieceName::ROOK;
-    this->isWhite = isWhite;
+    this->name_ = PieceName::ROOK;
+    this->isWhite_ = isWhite;
     this->x_Position_ = x_position;
     this->y_Position_ = y_position;
-    isAlive = true;
+    isAlive_ = true;
     pieceValue_ = 5;
 }
 
@@ -17,7 +17,7 @@ Rook::~Rook()
 bool Rook::isMovementPossible(int ix, int iy)
 {
     // Piece has to be on the board and be alive
-    if((ix >= 0 && ix < 8) && (iy >= 0 && iy < 8) && isAlive)
+    if((ix >= 0 && ix < 8) && (iy >= 0 && iy < 8) && isAlive_)
     {
         int x_movement = abs(ix - x_Position_);
         int y_movement = abs(iy - y_Position_);

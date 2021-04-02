@@ -74,11 +74,7 @@ void GameState::renderMainMenu()
             g_Menu[ i ].render();
 
         // Update screen
-#ifndef LAB
-        SDL_RenderPresent(g_Renderer);
-#else
-        SDL_UpdateWindowSurface(g_Window);
-#endif // LAB
+        updateScreen(g_Window, g_Renderer);
     }
 }
 
@@ -87,8 +83,8 @@ void GameState::renderPVP()
     bool showHint = true;
     int x = -1, y = -1;
 
-    States *states = new States();
     ChessBoard *board = new ChessBoard();
+    States *states = new States();
     GameResult gameResult = GameResult::NOT_END;
 
     states->setPieceTurn(board->choosePieceTurn(this, states));
@@ -111,6 +107,9 @@ void GameState::renderPVP()
                 case SDLK_ESCAPE:
                     renderPauseMenu();
                     break;
+                case SDLK_z:
+                    states->undoMove();
+                    break;
                 default:
                     break;
                 }
@@ -128,32 +127,26 @@ void GameState::renderPVP()
                     // If King move
                     if(board->focusedPiece_ == states->blackPieces_[12])
                     {
-                        board->focusedPiece_->isKingCastling[0] = false;
-                        board->focusedPiece_->isKingCastling[1] = false;
+                        states->kingCastling[0] = false;
+                        states->kingCastling[1] = false;
                     }
                     else if(board->focusedPiece_ == states->whitePieces_[12])
                     {
-                        board->focusedPiece_->isKingCastling[2] = false;
-                        board->focusedPiece_->isKingCastling[3] = false;
+                        states->kingCastling[2] = false;
+                        states->kingCastling[3] = false;
                     }
 
                     // If Rook move
                     else if(board->focusedPiece_ == states->blackPieces_[15])
-                    {
-                        board->focusedPiece_->isKingCastling[0] = false;
-                    }
+                        states->kingCastling[0] = false;
                     else if(board->focusedPiece_ == states->blackPieces_[8])
-                    {
-                        board->focusedPiece_->isKingCastling[1] = false;
-                    }
+                        states->kingCastling[1] = false;
                     else if(board->focusedPiece_ == states->whitePieces_[8])
-                    {
-                        board->focusedPiece_->isKingCastling[2] = false;
-                    }
+                        states->kingCastling[2] = false;
                     else if(board->focusedPiece_ == states->whitePieces_[15])
-                    {
-                        board->focusedPiece_->isKingCastling[4] = false;
-                    }
+                        states->kingCastling[4] = false;
+
+                    // If moved set focused piece as nullptr
                     board->focusedPiece_ = nullptr;
                 }
                 else
@@ -184,40 +177,266 @@ void GameState::renderPVP()
         // Render chess board
         board->renderChessBoard();
 
-        gameResult = states->checkWhoWon();
-        if(gameResult == GameResult::NOT_END)
+        // If white king was checked
+        if(states->isCheckmate(true, states->whitePieces_[12]->getPositionX(), states->whitePieces_[12]->getPositionY()))
         {
-            if(board->focusedPiece_ != nullptr)
+            // Set color of king checked
+            SDL_SetRenderDrawColor(g_Renderer, 128, 0, 0, 255);
+            // Render
+            board->renderOnePiece(board->indexToPixel(states->whitePieces_[12]->getPositionX(), true),
+                                  board->indexToPixel(states->whitePieces_[12]->getPositionY(), false));
+        }
+        // If black king was checked
+        if(states->isCheckmate(false, states->blackPieces_[12]->getPositionX(), states->blackPieces_[12]->getPositionY()))
+        {
+            // Set color of king checked
+            SDL_SetRenderDrawColor(g_Renderer, 128, 0, 0, 255);
+            // Render
+            board->renderOnePiece(board->indexToPixel(states->blackPieces_[12]->getPositionX(), true),
+                                  board->indexToPixel(states->blackPieces_[12]->getPositionY(), false));
+        }
+        // Render focused piece
+        if(board->focusedPiece_ != nullptr)
+        {
+            // Render the piece selected
+            if((board->focusedPiece_->getName() != PieceName::EMPTY) && (board->focusedPiece_->getColor() == states->getPieceTurn()))
             {
-                // Render the piece selected
-                if((board->focusedPiece_->getName() != PieceName::EMPTY) && (board->focusedPiece_->getColor() == states->getPieceTurn()))
-                    t_PieceSelected.render(board->indexToPixel(board->focus_.x, true), board->indexToPixel(board->focus_.y, false), CELL_SIZE, CELL_SIZE);
-
-                // Render all possible moves of the focus piece
-                if(showHint && (board->focusedPiece_->getColor() == states->getPieceTurn()))
-                    board->renderPossibleMoves(states);
+                // Set color of piece selected
+                SDL_SetRenderDrawColor(g_Renderer, 255, 105, 180, 255);
+                // Render
+                board->renderOnePiece(board->indexToPixel(board->focus_.x, true), board->indexToPixel(board->focus_.y, false));
             }
-            // Render all the pieces
-            board->renderAllPieces(states);
+
+            // Render all possible moves of the focus piece
+            if(showHint && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+                board->renderPossibleMoves(states);
         }
-        else
+        // Render all the pieces
+        board->renderAllPieces(states);
+
+        // Check game result
+        gameResult = states->checkWhoWon();
+        if(gameResult != GameResult::NOT_END)
         {
+            // Render endgame
             t_EndGame[(int) gameResult].render(board->getXboard(), board->getYboard(), BOARD_HEIGHT, BOARD_WIDTH);
+
+            // Update screen
+            updateScreen(g_Window, g_Renderer);
+
+            // Set game mode
+            gameState_ = GameMode::GAME_MODE_MAIN_MENU;
+            while (true)
+            {
+                if (SDL_WaitEvent(&e) != 0 && e.type == SDL_QUIT)
+                {
+                    gameState_ = GameMode::GAME_MODE_QUIT;
+                    break;
+                }
+                if (e.type == SDL_KEYDOWN)
+                    break;
+            }
+            break;
         }
+
         // Update screen
-#ifndef LAB
-        SDL_RenderPresent(g_Renderer);
-#else
-        SDL_UpdateWindowSurface(g_Window);
-#endif // LAB
+        updateScreen(g_Window, g_Renderer);
     }
-    delete states;
     delete board;
+    delete states;
 }
 
 void GameState::renderCPU()
 {
-    /******************************************************************* todo *******************************************************************/
+    bool showHint = true;
+    int x = -1, y = -1;
+
+    ChessBoard *board = new ChessBoard();
+    States *states = new States();
+    GameResult gameResult = GameResult::NOT_END;
+
+    // Set player turn is white piece
+    bool player = true;
+    bool CPU = false;
+
+    // Player chooses his piece
+    player = board->choosePieceTurn(this, states);
+    states->setPieceTurn(player);
+
+    // Player plays first
+    CPU = false;
+
+    while (gameState_ == GameMode::GAME_MODE_CPU)
+    {
+        // Handles the event queue
+        while (SDL_PollEvent(&e))
+        {
+            // User requests quit
+            if(e.type == SDL_QUIT)
+            {
+                gameState_ = GameMode::GAME_MODE_QUIT;
+                break;
+            }
+            else if(e.type == SDL_KEYDOWN)
+            {
+                switch (e.key.keysym.sym)
+                {
+                case SDLK_ESCAPE:
+                    renderPauseMenu();
+                    break;
+                case SDLK_z:
+                    states->undoMove();
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if(e.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if(!CPU)
+                {
+                    // Gets mouse position
+                    SDL_GetMouseState(&x, &y);
+                    // Updates the index of the focused matrix
+                    board->updateFocus((int) x, (int) y);
+
+                    // If there was a move, update the tile vectors and zero the focused tile
+                    if(board->checkMovement(states))
+                    {
+                        // If King move
+                        if(board->focusedPiece_ == states->blackPieces_[12])
+                        {
+                            states->kingCastling[0] = false;
+                            states->kingCastling[1] = false;
+                        }
+                        else if(board->focusedPiece_ == states->whitePieces_[12])
+                        {
+                            states->kingCastling[2] = false;
+                            states->kingCastling[3] = false;
+                        }
+
+                        // If Rook move
+                        else if(board->focusedPiece_ == states->blackPieces_[15])
+                            states->kingCastling[0] = false;
+                        else if(board->focusedPiece_ == states->blackPieces_[8])
+                            states->kingCastling[1] = false;
+                        else if(board->focusedPiece_ == states->whitePieces_[8])
+                            states->kingCastling[2] = false;
+                        else if(board->focusedPiece_ == states->whitePieces_[15])
+                            states->kingCastling[4] = false;
+
+                        // If moved set focused piece as nullptr
+                        board->focusedPiece_ = nullptr;
+                    }
+                    else
+                        // If there was no move, the focused piece is the current piece
+                        board->focusedPiece_ = states->getPiece(board->focus_.x, board->focus_.y);
+
+                    CPU = true;
+                }
+            }
+        }
+
+        // If save
+        if(gameState_ == GameMode::GAME_MODE_SAVE)
+        {
+            states->saveGame(GameMode::GAME_MODE_CPU);
+            gameState_ = GameMode::GAME_MODE_CPU;
+        }
+
+        // If load
+        if(gameState_ == GameMode::GAME_MODE_LOAD)
+        {
+            states->loadGame(GameMode::GAME_MODE_CPU);
+            gameState_ = GameMode::GAME_MODE_CPU;
+        }
+
+        // Clear screen
+        SDL_SetRenderDrawColor(g_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(g_Renderer);
+
+        // Render chess background
+        t_Background.renderBackground();
+        // Render chess board
+        board->renderChessBoard();
+
+        // Check game result
+        gameResult = states->checkWhoWon();
+        if(gameResult == GameResult::NOT_END)
+        {
+            // CPU play
+            if(CPU)
+            {
+                states->computerMove(!player);
+                CPU = false;
+            }
+        }
+
+        // If white king was checked
+        if(states->isCheckmate(true, states->whitePieces_[12]->getPositionX(), states->whitePieces_[12]->getPositionY()))
+        {
+            // Set color of king checked
+            SDL_SetRenderDrawColor(g_Renderer, 128, 0, 0, 255);
+            // Render
+            board->renderOnePiece(board->indexToPixel(states->whitePieces_[12]->getPositionX(), true),
+                                  board->indexToPixel(states->whitePieces_[12]->getPositionY(), false));
+        }
+        // If black king was checked
+        if(states->isCheckmate(false, states->blackPieces_[12]->getPositionX(), states->blackPieces_[12]->getPositionY()))
+        {
+            // Set color of king checked
+            SDL_SetRenderDrawColor(g_Renderer, 128, 0, 0, 255);
+            // Render
+            board->renderOnePiece(board->indexToPixel(states->blackPieces_[12]->getPositionX(), true),
+                                  board->indexToPixel(states->blackPieces_[12]->getPositionY(), false));
+        }
+        // Render focused piece
+        if(board->focusedPiece_ != nullptr)
+        {
+            // Render the piece selected
+            if((board->focusedPiece_->getName() != PieceName::EMPTY) && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+            {
+                // Set color of piece selected
+                SDL_SetRenderDrawColor(g_Renderer, 255, 105, 180, 255);
+                // Render
+                board->renderOnePiece(board->indexToPixel(board->focus_.x, true), board->indexToPixel(board->focus_.y, false));
+            }
+
+            // Render all possible moves of the focus piece
+            if(showHint && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+                board->renderPossibleMoves(states);
+        }
+        // Render all the pieces
+        board->renderAllPieces(states);
+
+        if(gameResult != GameResult::NOT_END)
+        {
+            // Render endgame
+            t_EndGame[(int) gameResult].render(board->getXboard(), board->getYboard(), BOARD_HEIGHT, BOARD_WIDTH);
+
+            // Update screen
+            updateScreen(g_Window, g_Renderer);
+
+            // Set game mode
+            gameState_ = GameMode::GAME_MODE_MAIN_MENU;
+            while (true)
+            {
+                if (SDL_WaitEvent(&e) != 0 && e.type == SDL_QUIT)
+                {
+                    gameState_ = GameMode::GAME_MODE_QUIT;
+                    break;
+                }
+                if (e.type == SDL_KEYDOWN)
+                    break;
+            }
+            break;
+        }
+
+        // Update screen
+        updateScreen(g_Window, g_Renderer);
+    }
+    delete board;
+    delete states;
 }
 
 void GameState::renderChessupMode()
@@ -268,10 +487,6 @@ void GameState::renderPauseMenu()
             g_Menu[ i ].render();
 
         // Update screen
-#ifndef LAB
-        SDL_RenderPresent(g_Renderer);
-#else
-        SDL_UpdateWindowSurface(g_Window);
-#endif // LAB
+        updateScreen(g_Window, g_Renderer);
     }
 }

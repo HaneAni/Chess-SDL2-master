@@ -8,7 +8,17 @@
 
 States::States()
 {
-    // Initialized pawns
+    // Set piece turn
+    pieceTurn_ = true;
+
+    // King can castling and undo move
+    for(int i = 0; i < 4; i++)
+    {
+        kingCastling[i] = true;
+    }
+    undoKingCastling = false;
+
+    // Initialization pawns
     for(int i = 0; i < 8; i++)
     {
         whitePieces_[i] = new Pawn(true, i, 6);
@@ -25,7 +35,7 @@ States::States()
     whitePieces_[14] = new Knight(true, 6, 7);
     whitePieces_[15] = new Rook(true, 7, 7);
 
-    //Inicialização das peças pretas
+    // Initialization black pieces
     blackPieces_[8]  = new Rook(false, 0, 0);
     blackPieces_[9]  = new Knight(false, 1, 0);
     blackPieces_[10] = new Bishop(false, 2, 0);
@@ -34,8 +44,6 @@ States::States()
     blackPieces_[13] = new Bishop(false, 5, 0);
     blackPieces_[14] = new Knight(false, 6, 0);
     blackPieces_[15] = new Rook(false, 7, 0);
-
-    pieceTurn = true;
 }
 
 States::~States()
@@ -129,7 +137,7 @@ bool States::isPositionValid(Piece* piece, int x_pos, int y_pos)
 
     if(piece->getName() == PieceName::KING)
     {
-        if(isCheck(piece->getColor(), x_pos, y_pos))
+        if(isCheckmate(piece->getColor(), x_pos, y_pos))
             return false;
         if(isKingCastling(piece, x_pos, y_pos))
             return true;
@@ -158,15 +166,13 @@ bool States::isMove(Piece* piece, int x_pos, int y_pos)
     setPawnEnemies(true, piece, -1, -1);
     PieceStatus is_In_The_Spot = isInTheSpot(piece, x_pos, y_pos);
     if(isPositionValid(piece, x_pos, y_pos) && isInTheWay(piece, x_pos, y_pos) == PieceStatus::EMPTY &&
-       is_In_The_Spot != PieceStatus::ALLY && pieceTurn == piece->getColor())
+       is_In_The_Spot != PieceStatus::ALLY && pieceTurn_ == piece->getColor())
     {
         // Remove the pawn's enemy
         setPawnEnemies(false, piece, -1, -1);
 
         if(piece->getName() == PieceName::KING)
         {
-            if(isCheck(piece->getColor(), x_pos, y_pos))
-                return false;
             if(isKingCastling(piece, x_pos, y_pos))
             {
                 if(x_pos == 6 && y_pos == 0)
@@ -177,19 +183,26 @@ bool States::isMove(Piece* piece, int x_pos, int y_pos)
                     whitePieces_[8]->setPosition(3, 7);
                 else if(x_pos == 6 && y_pos == 7)
                     whitePieces_[15]->setPosition(5, 7);
+
+                undoKingCastling = true;
             }
         }
 
         if(piece->getName() == PieceName::PAWN)
+        {
             if(is_In_The_Spot == PieceStatus::ENEMY && (x_pos - piece->getPositionX() == 0))
                 return false;
+
+            if(pawnTransform(piece, x_pos, y_pos))
+                return true;
+        }
 
         if(is_In_The_Spot == PieceStatus::ENEMY)
             eatPiece(x_pos, y_pos);
 
         piece->setPosition(x_pos, y_pos);
-        pawnTransform(piece);
-        pieceTurn = !pieceTurn;
+
+        pieceTurn_ = !pieceTurn_;
         return true;
     }
     // Remove the pawn's enemy
@@ -197,56 +210,171 @@ bool States::isMove(Piece* piece, int x_pos, int y_pos)
     return false;
 }
 
-bool States::isCheck(bool kingColor, int x_pos, int y_pos)
+void States::undoMove()
+{
+    Piece **aux;
+    int index = 0;
+    bool color = true;
+    int x_newPos = 0, y_newPos = 0, x_oldPos = 0, y_oldPos = 0;
+
+    // Check stack empty or not
+    if(index_stack.empty() || color_stack.empty() || x_position_stack.empty() || y_position_stack.empty())
+        return;
+
+    // Get piece to be undone
+
+    // Index of the piece
+    index = index_stack.top();
+    index_stack.pop();
+    // Color of the piece
+    color = color_stack.top();
+    color_stack.pop();
+    // New position x of the piece
+    x_newPos = x_position_stack.top();
+    x_position_stack.pop();
+    // New position y of the piece
+    y_newPos = y_position_stack.top();
+    y_position_stack.pop();
+    // Old position x of the piece
+    x_oldPos = x_position_stack.top();
+    x_position_stack.pop();
+    // Old position y of the piece
+    y_oldPos = y_position_stack.top();
+    y_position_stack.pop();
+
+    // Check color of the piece
+    color ? (aux = whitePieces_) : (aux = blackPieces_);
+
+    // Check if pawn transform
+    if(index == 99)
+    {
+        index = index_stack.top();
+        index_stack.pop();
+
+        delete aux[index];
+        aux[index] = new Pawn(color, x_oldPos, y_oldPos);
+    }
+
+    // Check if king castling
+    if(index == 8 || index == 12 || index == 15)
+    {
+        // Get state of king castling
+        kingCastling[3] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+        kingCastling[2] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+        kingCastling[1] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+        kingCastling[0] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+    }
+    else if(index == 100)
+    {
+        // Get index of the piece
+        index = index_stack.top();
+        index_stack.pop();
+        // Get state of king castling
+        kingCastling[3] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+        kingCastling[2] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+        kingCastling[1] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+        kingCastling[0] = kingCastling_stack.top();
+        kingCastling_stack.pop();
+
+        if(x_newPos == 2)
+        {
+            aux[8]->setPosition(0, y_oldPos);
+        }
+        else if(x_newPos == 6)
+        {
+            aux[15]->setPosition(7, y_oldPos);
+        }
+    }
+
+    aux[index]->setPosition(x_oldPos, y_oldPos);
+    setPieceTurn(!getPieceTurn());
+
+    // Revive dead piece
+    if(!aux[index]->getIsAlive())
+        aux[index]->reviveFromDead();
+
+    if(x_newPos == -1 && y_newPos == -1)
+    {
+        setPieceTurn(!getPieceTurn());
+        undoMove();
+    }
+}
+
+bool States::isCheckmate(bool kingColor, int x_pos, int y_pos)
 {
     Piece **aux;
     kingColor ? aux = blackPieces_ : aux = whitePieces_;
 
     for(int i = 0; i < 16; i++)
     {
-        // Set the pawn's enemy
-        setPawnEnemies(true, aux[i], x_pos, y_pos);
         // Check if enemies can go to the King, and if the way to go to the King is clear.
-        if(aux[i]->isMovementPossible(x_pos, y_pos) && isInTheWay(aux[i], x_pos, y_pos) == PieceStatus::EMPTY)
+        if(aux[i]->getName() == PieceName::PAWN)
+        {
+            if(abs(aux[i]->getPositionX() - x_pos) == 1)
+            {
+                if((kingColor && aux[i]->getPositionY() - y_pos == -1) || (!kingColor && aux[i]->getPositionY() - y_pos == 1) )
+                    return true;
+            }
+        }
+        else if(aux[i]->isMovementPossible(x_pos, y_pos) && isInTheWay(aux[i], x_pos, y_pos) == PieceStatus::EMPTY)
             return true;
-        // Remove the pawn's enemy
-        setPawnEnemies(false, aux[i], -1, -1);
     }
     return false;
 }
 
-bool States::isCheckMate(bool kingColor)
+bool States::pawnTransform(Piece* piece, int x_pos, int y_pos)
 {
     Piece **aux;
-    Piece **aux2;
-    int x, y;
+    bool color;
 
-    if(kingColor)
+    if(piece->getName() == PieceName::PAWN)
     {
-        aux = whitePieces_;
-        aux2 = blackPieces_;
+        color = piece->getColor();
+        if((color && y_pos == 0) || (!color && y_pos == 7))
+        {
+            color ? (aux = whitePieces_) : (aux = blackPieces_);
+            for(int i = 0; i < 16; i++)
+            {
+                if(aux[i]->getPositionX() == x_pos && aux[i]->getPositionY() == y_pos)
+                {
+                    delete aux[i];
+                    aux[i] = new Queen(color, x_pos, y_pos);
+                    return true;
+                }
+            }
+        }
     }
-    else
-    {
-        aux = blackPieces_;
-        aux2 = whitePieces_;
-    }
+    return false;
+}
 
-    // Set position x, y of the King
-    x = aux[12]->getPositionX();
-    y = aux[12]->getPositionY();
-
-    if(isCheck(kingColor, x, y))
+bool States::isKingCastling(Piece* piece, int x_pos, int y_pos)
+{
+    if(piece->getName() == PieceName::KING)
     {
-        // Possible move of the King
-        for(int i = -1; i < 2; i++)
-            for(int j = -1; j < 2; j++)
-                for(int k = 0; k < 16; k++)
-                    if(!isCheck(kingColor, x+i, y+j) && isInTheSpot(aux[12], x+i, y+j) != PieceStatus::ALLY &&
-                       (!aux2[k]->isMovementPossible(x+i, y+j) || isInTheWay(aux2[k], x+i, y+j) != PieceStatus::EMPTY) &&
-                       aux[12]->isMovementPossible(x+i, y+j) )
-                        return false;
-        return true;
+        if(piece->kingCastling(x_pos, y_pos) && isInTheSpot(piece, x_pos, y_pos) == PieceStatus::EMPTY)
+        {
+            if(!piece->getColor())
+            {
+                if(x_pos == 6 && kingCastling[0] && isInTheSpot(piece, 5, 0) == PieceStatus::EMPTY)
+                    return true;
+                if(x_pos == 2 && kingCastling[1] && isInTheSpot(piece, 3, 0) == PieceStatus::EMPTY && isInTheSpot(piece, 1, 0) == PieceStatus::EMPTY)
+                    return true;
+            }
+            else
+            {
+                if(x_pos == 2 && kingCastling[2] && isInTheSpot(piece, 3, 7) == PieceStatus::EMPTY && isInTheSpot(piece, 1, 7) == PieceStatus::EMPTY)
+                    return true;
+                if(x_pos == 6 && kingCastling[3] && isInTheSpot(piece, 5, 7) == PieceStatus::EMPTY)
+                    return true;
+            }
+        }
     }
     return false;
 }
@@ -263,8 +391,8 @@ void States::killAllPieces()
 GameResult States::checkWhoWon()
 {
     bool white = false, black = false;
-    white = !whitePieces_[12]->getIsAlive() || isCheckMate(true);
-    black = !blackPieces_[12]->getIsAlive() || isCheckMate(false);
+    white = !whitePieces_[12]->getIsAlive();
+    black = !blackPieces_[12]->getIsAlive();
 
     if(white && black)
         return GameResult::DRAW;
@@ -288,6 +416,164 @@ GameResult States::checkWhoWon()
         }
     }
     return GameResult::NOT_END;
+}
+
+int States::valueMove()
+{
+    Piece **aux1;
+    int value = 0;
+
+    for(int i = 0; i < 16; i++)
+    {
+        aux1 = whitePieces_;
+        for(int j = 0; j < 2; j++)
+        {
+            if(aux1[i]->getPositionX() != -1 && aux1[i]->getPositionY() != -1)
+                value += aux1[i]->getPieceValue();
+            aux1 = blackPieces_;
+        }
+    }
+    return value;
+}
+
+int States::Alpha_Beta(int depth, bool color, int alpha, int beta)
+{
+    Piece **aux1;
+    int bestMove = 0;
+
+    if(depth == 0)
+        return valueMove();
+
+    if(color)
+    {
+        aux1 = whitePieces_;
+        bestMove = 10000; // Gia tri ban dau
+        for(int i = 0; i < 16; i++)
+        {
+            if(aux1[i]->getPositionX() == -1 || aux1[i]->getPositionY() == -1)
+                continue;
+
+            for(int ix = 0; ix < 8; ix++)
+            {
+                for(int iy = 0; iy < 8; iy++)
+                {
+                    if(isMove(aux1[i], ix, iy))
+                    {
+                        bestMove = std::min(bestMove, Alpha_Beta(depth-1, color, alpha, beta));
+                        // Undo
+                        //undoMove();
+                        alpha = std::min(alpha, bestMove);
+                        if(beta <= alpha)
+                        {
+                            return bestMove;
+                        }
+                    }
+                }
+            }
+        }
+        return bestMove;
+    }
+    else
+    {
+        aux1 = blackPieces_;
+        bestMove = -10000; // Gia tri ban dau
+        for(int i = 0; i < 16; i++)
+        {
+            if(aux1[i]->getPositionX() == -1 || aux1[i]->getPositionY() == -1)
+                continue;
+
+            for(int ix = 0; ix < 8; ix++)
+            {
+                for(int iy = 0; iy < 8; iy++)
+                {
+                    if(isMove(aux1[i], ix, iy))
+                    {
+                        bestMove = std::max(bestMove, Alpha_Beta(depth-1, color, alpha, beta));
+                        // Undo
+                        //undoMove();
+                        beta = std::max(beta, bestMove);
+                        if(beta <= alpha)
+                        {
+                            return bestMove;
+                        }
+                    }
+                }
+            }
+        }
+        return bestMove;
+    }
+}
+
+PieceValue States::getNextMove(bool color)
+{
+    Piece **aux1;
+    PieceValue oldPos, newPos, oldPosTemp, newPosTemp;
+    int minimax = 10000, minimaxTemp = 10000;
+    int index = 0;
+
+    aux1 = blackPieces_;
+    for(int i = 0; i < 16; i++)
+    {
+        if(aux1[i]->getPositionX() == -1 || aux1[i]->getPositionY() == -1)
+            continue;
+
+        for(int ix = 0; ix < 8; ix++)
+        {
+            for(int iy = 0; iy < 8; iy++)
+            {
+                if(isMove(aux1[i], ix, iy))
+                {
+                    int alpha = 9999, beta = -9999;
+                    int temp = Alpha_Beta(3, color, alpha, beta);
+                    if(minimaxTemp > temp)
+                    {
+                        newPosTemp.x_Value_ = ix;
+                        newPosTemp.y_Value_ = iy;
+                        minimaxTemp = temp;
+                    }
+                    //undoMove();
+                }
+            }
+        }
+        if(minimax > minimaxTemp)
+        {
+            minimax = minimaxTemp;
+            index = i;
+        }
+    }
+
+    index_stack.push(index);
+    return newPos;
+}
+
+void States::computerMove(bool color)
+{
+    Piece **aux;
+    PieceValue newPos;
+    int index = 0;
+    int x_newPos = 0, y_newPos = 0, x_oldPos = 0, y_oldPos = 0;
+
+    newPos = getNextMove(color);
+    // Get index
+    index = index_stack.top();
+    index_stack.pop();
+    // Get new position
+    x_newPos = newPos.x_Value_;
+    y_newPos = newPos.y_Value_;
+
+    color ? (aux = whitePieces_) : (aux = blackPieces_);
+
+    isMove(aux[index], x_newPos, y_newPos);
+}
+
+void States::saveGame(GameMode)
+{
+    /******************************************************************* todo *******************************************************************/
+}
+
+void States::loadGame(GameMode)
+{
+    /******************************************************************* todo *******************************************************************/
 }
 
 bool States::setPiece(Piece* piece, int x_pos, int y_pos)
@@ -319,26 +605,6 @@ Piece* States::getPiece(int x_pos, int y_pos)
         }
     }
     return emptyPiece_;
-}
-
-void States::setPieceTurn(bool pieceTurn)
-{
-    this->pieceTurn = pieceTurn;
-}
-
-bool States::getPieceTurn()
-{
-    return this->pieceTurn;
-}
-
-void States::saveGame(GameMode)
-{
-    /******************************************************************* todo *******************************************************************/
-}
-
-void States::loadGame(GameMode)
-{
-    /******************************************************************* todo *******************************************************************/
 }
 
 void States::setPawnEnemies(bool check, Piece* piece, int x_enemyPosition, int y_enemyPosition)
@@ -375,8 +641,8 @@ void States::setPawnEnemies(bool check, Piece* piece, int x_enemyPosition, int y
 void States::eatPiece(int x_pos, int y_pos)
 {
     Piece **aux;
-    aux = whitePieces_;
 
+    aux = whitePieces_;
     for(int i = 0; i < 2; i++)
     {
         for(int j = 0; j < 16; j++)
@@ -386,55 +652,4 @@ void States::eatPiece(int x_pos, int y_pos)
         }
         aux = blackPieces_;
     }
-}
-
-void States::pawnTransform(Piece* piece)
-{
-    int x, y;
-    bool color;
-    Piece **aux;
-
-    if(piece->getName() == PieceName::PAWN)
-    {
-        color = piece->getColor();
-        y = piece->getPositionY();
-        if((color && y == 0) || (!color && y == 7))
-        {
-            x = piece->getPositionX();
-            color ? (aux = whitePieces_) : (aux = blackPieces_);
-            for(int i = 0; i < 16; i++)
-            {
-                if(aux[i]->getPositionX() == x && aux[i]->getPositionY() == y)
-                {
-                    aux[i] = new Queen(color, x, y);
-                    return;
-                }
-            }
-        }
-    }
-}
-
-bool States::isKingCastling(Piece* piece, int x_pos, int y_pos)
-{
-    if(piece->getName() == PieceName::KING)
-    {
-        if(piece->kingCastling(x_pos, y_pos) && isInTheSpot(piece, x_pos, y_pos) == PieceStatus::EMPTY)
-        {
-            if(!piece->getColor())
-            {
-                if(x_pos == 6 && piece->isKingCastling[0] && isInTheSpot(piece, 5, 0) == PieceStatus::EMPTY)
-                    return true;
-                if(x_pos == 2 && piece->isKingCastling[1] && isInTheSpot(piece, 3, 0) == PieceStatus::EMPTY && isInTheSpot(piece, 1, 0) == PieceStatus::EMPTY)
-                    return true;
-            }
-            else
-            {
-                if(x_pos == 2 && piece->isKingCastling[2] && isInTheSpot(piece, 3, 7) == PieceStatus::EMPTY && isInTheSpot(piece, 1, 7) == PieceStatus::EMPTY)
-                    return true;
-                if(x_pos == 6 && piece->isKingCastling[3] && isInTheSpot(piece, 5, 7) == PieceStatus::EMPTY)
-                    return true;
-            }
-        }
-    }
-    return false;
 }

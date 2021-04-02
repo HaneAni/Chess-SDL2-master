@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 			cout << "Failed to load media" << endl;
 		}
 		else {
-            gm->startGameState(GameMode::GAME_MODE_PVP);
+            gm->startGameState(GameMode::GAME_MODE_CPU);
     	}
 
     	// Release resources and end sdl

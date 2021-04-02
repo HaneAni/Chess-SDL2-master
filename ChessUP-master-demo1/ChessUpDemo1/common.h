@@ -4,6 +4,8 @@
 #include "Texture.h"
 #include "Menu.h"
 
+#include <stack>
+
 /*********** Constant ***********/
 
 /// Screen parameter
@@ -25,7 +27,7 @@ const int OFFSET = 20;
 
 /// Image
 static const char main_menu[]   = {"../image/Main_Chess.jpg"};
-static const char chess_background[]  = {"../image/006.png"};
+static const char chess_background[]  = {"../image/136.png"};
 
 static const char chess_board[]  = {"../image/Chess_Board_Wood.png"};
 static const char piece_selected[]  = {"../image/Piece_Selected_80px.png"};
@@ -78,6 +80,16 @@ extern Texture t_BlackPieces[7];
 extern Texture t_PossibleMoves;
 extern Texture t_PieceSelected;
 extern Texture t_EndGame[3];
+
+
+/************* Stack *************/
+/// Stack save movement
+extern std::stack<int> x_position_stack;
+extern std::stack<int> y_position_stack;
+extern std::stack<int> index_stack;
+extern std::stack<bool> color_stack;
+extern std::stack<bool> kingCastling_stack;
+
 
 /*********** RGB Color ***********/
 /**

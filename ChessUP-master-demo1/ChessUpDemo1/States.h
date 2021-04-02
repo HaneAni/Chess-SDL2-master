@@ -4,16 +4,17 @@
 #include "Piece.h"
 #include "GameState.h"
 
+#include <algorithm>
+#include <vector>
 
 enum class PieceStatus {EMPTY, ENEMY, ALLY};
 enum class GameResult {WHITE_WINS, BLACK_WINS, DRAW, NOT_END};
-enum class Level {EASY, MEDIUM, HARD};
 
 struct PieceValue
 {
-    int x_maxValue_ = -1;
-    int y_maxValue_ = -1;
-    int value_ = -20;
+    int index = -1;
+    int x_Value_ = -1;
+    int y_Value_ = -1;
 };
 
 /**@brief Class that defines states for a part
@@ -31,28 +32,47 @@ public:
     States();
     ~States();
 
-    // Vector that keeps the best moves of each piece:
-    struct PieceValue whiteVallues_[16];
-    struct PieceValue blackVallues_[16];
     // Vector of board pieces:
     Piece* whitePieces_[16];
     Piece* blackPieces_[16];
 
-    PieceStatus isInTheWay(Piece* , int, int);
-    PieceStatus isInTheSpot(Piece* , int, int);
+    // Check king castling and undo
+    bool kingCastling[4];
+    bool undoKingCastling;
+
+    PieceStatus isInTheWay(Piece*, int, int);
+    PieceStatus isInTheSpot(Piece*, int, int);
 
     // Check for valid position
     bool isPositionValid(Piece* , int, int);
     // Move the piece or eat a enemy piece if possible
-    bool isMove(Piece* , int, int);
+    bool isMove(Piece*, int, int);
+    // Undo movement
+    void undoMove();
     // Check is checkmate or not
-    bool isCheck(bool, int, int);
-    // Check when checkmate, is the King can move
-    bool isCheckMate(bool);
+    bool isCheckmate(bool, int, int);
+    // Checks if pawn goes to the end of the chess board, it can transform to queen
+    bool pawnTransform(Piece*, int, int);
+    // King is allowed to make a special move, known as castling
+    bool isKingCastling(Piece*, int, int);
     // Kill all pieces
     void killAllPieces();
     // Check the winner
     GameResult checkWhoWon();
+
+
+    // Vector that keeps the best moves of each piece:
+    PieceValue whiteVallues_[16];
+    PieceValue blackVallues_[16];
+
+    // Return value of movement
+    int valueMove();
+    // Alpha beta algorithm
+    int Alpha_Beta(int, bool, int, int);
+    // Get the best move for computer
+    PieceValue getNextMove(bool);
+    // Play computer move
+    void computerMove(bool);
 
     // Save game mode
     void saveGame(GameMode);
@@ -60,27 +80,24 @@ public:
     void loadGame(GameMode);
 
     // Set piece in this position, return false if there was another piece or outside the board
-    bool setPiece(Piece* , int, int);
+    bool setPiece(Piece*, int, int);
     // Returns piece from x,y position (returns an empty if there is no piece in the position)
     Piece* getPiece(int, int);
+
     // Set the turn of the piece to be played (for the Load function)
-    void setPieceTurn(bool);
+    void setPieceTurn(bool pieceTurn) {this->pieceTurn_ = pieceTurn;}
     // Get the turn of the piece to be played
-    bool getPieceTurn();
+    bool getPieceTurn() {return pieceTurn_;}
 
 private:
     Piece* emptyPiece_ = new Piece();
     // Check black turn (false) or white turn (true)
-    bool pieceTurn;
+    bool pieceTurn_;
 
     // Set the pawn's enemy
-    void setPawnEnemies(bool, Piece* , int, int);
+    void setPawnEnemies(bool, Piece*, int, int);
     // Kill the enemy piece in position x,y
     void eatPiece(int, int);
-    // Checks if pawn goes to the end of the chess board, it can transform to queen
-    void pawnTransform(Piece*);
-    // King is allowed to make a special move, known as castling
-    bool isKingCastling(Piece*, int, int);
 
 };
 
