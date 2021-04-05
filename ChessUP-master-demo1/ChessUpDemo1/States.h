@@ -52,7 +52,8 @@ public:
     // Check is checkmate or not
     bool isCheckmate(bool, int, int);
     // Checks if pawn goes to the end of the chess board, it can transform to queen
-    bool pawnTransform(Piece*, int, int);
+    bool isPawnTransform(Piece*, int, int);
+    void pawnTransform(Piece*, int, int);
     // King is allowed to make a special move, known as castling
     bool isKingCastling(Piece*, int, int);
     // Kill all pieces
@@ -83,6 +84,8 @@ public:
     bool setPiece(Piece*, int, int);
     // Returns piece from x,y position (returns an empty if there is no piece in the position)
     Piece* getPiece(int, int);
+    // Returns index of piece from x,y position (returns -1 if there is no piece in the position)
+    int getPieceIndex(int, int);
 
     // Set the turn of the piece to be played (for the Load function)
     void setPieceTurn(bool pieceTurn) {this->pieceTurn_ = pieceTurn;}

@@ -136,15 +136,15 @@ void GameState::renderPVP()
                         states->kingCastling[3] = false;
                     }
 
-                    // If Rook move
-                    else if(board->focusedPiece_ == states->blackPieces_[15])
+                    // If Rook move or be eaten
+                    else if(board->focusedPiece_ == states->blackPieces_[15] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[15])
                         states->kingCastling[0] = false;
-                    else if(board->focusedPiece_ == states->blackPieces_[8])
+                    else if(board->focusedPiece_ == states->blackPieces_[8] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[8])
                         states->kingCastling[1] = false;
-                    else if(board->focusedPiece_ == states->whitePieces_[8])
+                    else if(board->focusedPiece_ == states->whitePieces_[8] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[8])
                         states->kingCastling[2] = false;
-                    else if(board->focusedPiece_ == states->whitePieces_[15])
-                        states->kingCastling[4] = false;
+                    else if(board->focusedPiece_ == states->whitePieces_[15] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[15])
+                        states->kingCastling[3] = false;
 
                     // If moved set focused piece as nullptr
                     board->focusedPiece_ = nullptr;

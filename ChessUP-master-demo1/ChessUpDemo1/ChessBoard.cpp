@@ -338,111 +338,12 @@ bool ChessBoard::choosePieceTurn(GameState *gm, States* states)
 
 bool ChessBoard::checkMovement(States* states)
 {
-    int x_pos = -1, y_pos = -1;
-    Piece* piece;
     bool move = false;
-
     if(focusedPiece_ != nullptr)
     {
-        // Get position of focused piece
-        x_pos = focusedPiece_->getPositionX();
-        y_pos = focusedPiece_->getPositionY();
-        piece = states->getPiece(focus_.x, focus_.y);
         // Check focused piece can move or not
         if(focusedPiece_->getName() != PieceName::EMPTY)
             move = states->isMove(focusedPiece_, focus_.x, focus_.y);
-    }
-
-    if(move)
-    {
-        Piece **aux1;
-        Piece **aux2;
-        int index1 = -1, index2 = -1;
-
-        focusedPiece_->getColor() ? (aux1 = states->whitePieces_ , aux2 = states->blackPieces_) :
-                                    (aux1 = states->blackPieces_ , aux2 = states->whitePieces_);
-
-        // Find index of focused piece and eaten piece
-        for(int i = 0; i < 16; i++)
-        {
-            if(focusedPiece_ == aux1[i])
-            {
-                index1 = i;
-                break;
-            }
-        }
-        if(piece->getName() != PieceName::EMPTY)
-        {
-            for(int i = 0; i < 16; i++)
-            {
-                if(piece == aux2[i])
-                {
-                    index2 = i;
-                    break;
-                }
-            }
-        }
-
-        // Push focused piece into stack
-        index_stack.push(index1);
-        // Push focused piece color into stack
-        color_stack.push(focusedPiece_->getColor());
-        // Push old position into stack
-        x_position_stack.push(x_pos);
-        y_position_stack.push(y_pos);
-        // Push new position into stack
-        x_position_stack.push(focus_.x);
-        y_position_stack.push(focus_.y);
-
-        // Check if pawn transform
-        if(states->pawnTransform(focusedPiece_, focus_.x, focus_.y))
-        {
-            // If pawn transform push 99 into stack
-            index_stack.push(99);
-        }
-
-        // Check if king castling
-        if(focusedPiece_->getName() == PieceName::KING)
-        {
-            if((focus_.x == 2 || focus_.x == 6) && (focus_.y == 0 || focus_.y == 7) && states->undoKingCastling)
-            {
-                // If king castling push 100 to stack
-                index_stack.push(100);
-                kingCastling_stack.push(states->kingCastling[0]);
-                kingCastling_stack.push(states->kingCastling[1]);
-                kingCastling_stack.push(states->kingCastling[2]);
-                kingCastling_stack.push(states->kingCastling[3]);
-                states->undoKingCastling = false;
-            }
-            else
-            {
-                kingCastling_stack.push(states->kingCastling[0]);
-                kingCastling_stack.push(states->kingCastling[1]);
-                kingCastling_stack.push(states->kingCastling[2]);
-                kingCastling_stack.push(states->kingCastling[3]);
-            }
-        }
-        else if(focusedPiece_->getName() == PieceName::ROOK)
-        {
-            kingCastling_stack.push(states->kingCastling[0]);
-            kingCastling_stack.push(states->kingCastling[1]);
-            kingCastling_stack.push(states->kingCastling[2]);
-            kingCastling_stack.push(states->kingCastling[3]);
-        }
-
-        // Check if piece have been eaten
-        if(index2 != -1)
-        {
-            // Push into stack
-            index_stack.push(index2);
-            color_stack.push(piece->getColor());
-
-            x_position_stack.push(focus_.x);
-            y_position_stack.push(focus_.y);
-
-            x_position_stack.push(-1);
-            y_position_stack.push(-1);
-        }
     }
     return move;
 }

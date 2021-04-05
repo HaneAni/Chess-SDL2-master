@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1616918868 source:f:\project\chessup-master-demo1\chessupdemo1\main.cpp
+1617623463 source:f:\project\chessup-master-demo1\chessupdemo1\main.cpp
 	"SDL_utils.h"
 	"common.h"
 	"ChessBoard.h"
@@ -13,34 +13,34 @@
 
 1614778736 f:\project\chessup-master-demo1\chessupdemo1\checkinput.h
 
-1616757651 source:f:\project\chessup-master-demo1\chessupdemo1\sdl_utils.cpp
+1616707250 source:f:\project\chessup-master-demo1\chessupdemo1\sdl_utils.cpp
 	"SDL_utils.h"
 
-1616757634 f:\project\chessup-master-demo1\chessupdemo1\sdl_utils.h
+1616707234 f:\project\chessup-master-demo1\chessupdemo1\sdl_utils.h
 	<iostream>
 	<SDL.h>
 
-1616906883 f:\project\chessup-master-demo1\chessupdemo1\common.h
+1616856482 f:\project\chessup-master-demo1\chessupdemo1\common.h
 	"Texture.h"
 	"Menu.h"
 	<stack>
 
-1616510836 f:\project\chessup-master-demo1\chessupdemo1\texture.h
+1616460436 f:\project\chessup-master-demo1\chessupdemo1\texture.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	"SDL_utils.h"
 	"common.h"
 
-1616500387 f:\project\chessup-master-demo1\chessupdemo1\menu.h
+1616449986 f:\project\chessup-master-demo1\chessupdemo1\menu.h
 	"GameState.h"
 	"Piece.h"
 	"common.h"
 
-1616509681 source:f:\project\chessup-master-demo1\chessupdemo1\texture.cpp
+1616459280 source:f:\project\chessup-master-demo1\chessupdemo1\texture.cpp
 	"Texture.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl.h
 	"SDL_main.h"
 	"SDL_stdinc.h"
 	"SDL_assert.h"
@@ -76,12 +76,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_main.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_main.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_stdinc.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_stdinc.h
 	"SDL_config.h"
 	<sys/types.h>
 	<stdio.h>
@@ -110,28 +110,28 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_config.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_config.h
 	"SDL_platform.h"
 	<sdkddkver.h>
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_platform.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_platform.h
 	"AvailabilityMacros.h"
 	"TargetConditionals.h"
 	<winapifamily.h>
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\begin_code.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\begin_code.h
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\close_code.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\close_code.h
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_assert.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_assert.h
 	"SDL_config.h"
 	"begin_code.h"
 	<signal.h>
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_atomic.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_atomic.h
 	"SDL_stdinc.h"
 	"SDL_platform.h"
 	"begin_code.h"
@@ -139,7 +139,7 @@
 	<mbarrier.h>
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_audio.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_audio.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_endian.h"
@@ -149,25 +149,25 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_error.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_error.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_endian.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_endian.h
 	"SDL_stdinc.h"
 	<endian.h>
 	<endian.h>
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_mutex.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_mutex.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_thread.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_thread.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_atomic.h"
@@ -178,18 +178,18 @@
 	<stdlib.h>
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_rwops.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_rwops.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_clipboard.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_clipboard.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_cpuinfo.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_cpuinfo.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<intrin.h>
@@ -208,7 +208,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_events.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_events.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -222,7 +222,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_video.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_video.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -230,13 +230,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_pixels.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_pixels.h
 	"SDL_stdinc.h"
 	"SDL_endian.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_rect.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_rect.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_pixels.h"
@@ -244,7 +244,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_surface.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_surface.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -253,11 +253,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_blendmode.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_blendmode.h
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_keyboard.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_keyboard.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_keycode.h"
@@ -265,27 +265,27 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_keycode.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_keycode.h
 	"SDL_stdinc.h"
 	"SDL_scancode.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_scancode.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_scancode.h
 	"SDL_stdinc.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_mouse.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_mouse.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_joystick.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_joystick.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_gamecontroller.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_gamecontroller.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_rwops.h"
@@ -294,17 +294,17 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_sensor.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_sensor.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_quit.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_quit.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_gesture.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_gesture.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -312,65 +312,65 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_touch.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_touch.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_filesystem.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_filesystem.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_haptic.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_haptic.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_joystick.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_hints.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_hints.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_loadso.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_loadso.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_log.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_log.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_messagebox.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_messagebox.h
 	"SDL_stdinc.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_metal.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_metal.h
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_power.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_power.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_render.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_render.h
 	"SDL_stdinc.h"
 	"SDL_rect.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_shape.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_shape.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -379,7 +379,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_system.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_system.h
 	"SDL_stdinc.h"
 	"SDL_keyboard.h"
 	"SDL_render.h"
@@ -387,72 +387,72 @@
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_timer.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_timer.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572889 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_version.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_version.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_locale.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_locale.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1608572888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_misc.h
+1608518888 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_misc.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1561870398 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_image.h
+1561819998 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_image.h
 	"SDL.h"
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
 
-1547322290 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_ttf.h
+1547268290 f:\project\chessup-master-demo1\sdl2_lib\include\sdl2\sdl_ttf.h
 	"SDL.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616485661 f:\project\chessup-master-demo1\chessupdemo1\gamestate.h
+1616435260 f:\project\chessup-master-demo1\chessupdemo1\gamestate.h
 	"Texture.h"
 	"common.h"
 
-1616856351 f:\project\chessup-master-demo1\chessupdemo1\piece.h
+1616805950 f:\project\chessup-master-demo1\chessupdemo1\piece.h
 	<string>
 
-1616855877 source:f:\project\chessup-master-demo1\chessupdemo1\piece.cpp
+1616805476 source:f:\project\chessup-master-demo1\chessupdemo1\piece.cpp
 	"Piece.h"
 
-1616918868 source:f:\project\chessup-master-demo1\chessupdemo1\gamestate.cpp
+1617621881 source:f:\project\chessup-master-demo1\chessupdemo1\gamestate.cpp
 	"GameState.h"
 	"ChessBoard.h"
 	"Piece.h"
 	"States.h"
 
-1617020779 f:\project\chessup-master-demo1\chessupdemo1\chessboard.h
+1616970378 f:\project\chessup-master-demo1\chessupdemo1\chessboard.h
 	"SDL_utils.h"
 	"Texture.h"
 	"Piece.h"
 	"States.h"
 	"common.h"
 
-1616917086 f:\project\chessup-master-demo1\chessupdemo1\states.h
+1617620940 f:\project\chessup-master-demo1\chessupdemo1\states.h
 	"Piece.h"
 	"GameState.h"
 	<algorithm>
 	<vector>
 
-1616504350 source:f:\project\chessup-master-demo1\chessupdemo1\menu.cpp
+1616453950 source:f:\project\chessup-master-demo1\chessupdemo1\menu.cpp
 	"Menu.h"
 
-1617019925 source:f:\project\chessup-master-demo1\chessupdemo1\states.cpp
+1617621003 source:f:\project\chessup-master-demo1\chessupdemo1\states.cpp
 	"States.h"
 	"King.h"
 	"Queen.h"
@@ -461,46 +461,46 @@
 	"Rook.h"
 	"Pawn.h"
 
-1616906883 source:f:\project\chessup-master-demo1\chessupdemo1\chessboard.cpp
+1617595460 source:f:\project\chessup-master-demo1\chessupdemo1\chessboard.cpp
 	"ChessBoard.h"
 	"GameState.h"
 	"States.h"
 	"Piece.h"
 	"Pawn.h"
 
-1616761144 source:f:\project\chessup-master-demo1\chessupdemo1\rook.cpp
+1616710744 source:f:\project\chessup-master-demo1\chessupdemo1\rook.cpp
 	"Rook.h"
 
-1615289543 f:\project\chessup-master-demo1\chessupdemo1\rook.h
+1615235542 f:\project\chessup-master-demo1\chessupdemo1\rook.h
 	"Piece.h"
 
-1616761143 source:f:\project\chessup-master-demo1\chessupdemo1\bishop.cpp
+1616710742 source:f:\project\chessup-master-demo1\chessupdemo1\bishop.cpp
 	"Bishop.h"
 
-1615289669 f:\project\chessup-master-demo1\chessupdemo1\bishop.h
+1615235668 f:\project\chessup-master-demo1\chessupdemo1\bishop.h
 	"Piece.h"
 
-1616855847 source:f:\project\chessup-master-demo1\chessupdemo1\king.cpp
+1616805446 source:f:\project\chessup-master-demo1\chessupdemo1\king.cpp
 	"King.h"
 
-1616855849 f:\project\chessup-master-demo1\chessupdemo1\king.h
+1616805448 f:\project\chessup-master-demo1\chessupdemo1\king.h
 	"Piece.h"
 
-1616761144 source:f:\project\chessup-master-demo1\chessupdemo1\knight.cpp
+1616710744 source:f:\project\chessup-master-demo1\chessupdemo1\knight.cpp
 	"Knight.h"
 
-1615285037 f:\project\chessup-master-demo1\chessupdemo1\knight.h
+1615231036 f:\project\chessup-master-demo1\chessupdemo1\knight.h
 	"Piece.h"
 
-1616761144 source:f:\project\chessup-master-demo1\chessupdemo1\queen.cpp
+1616710744 source:f:\project\chessup-master-demo1\chessupdemo1\queen.cpp
 	"Queen.h"
 
-1615288919 f:\project\chessup-master-demo1\chessupdemo1\queen.h
+1615234918 f:\project\chessup-master-demo1\chessupdemo1\queen.h
 	"Piece.h"
 
-1616761235 source:f:\project\chessup-master-demo1\chessupdemo1\pawn.cpp
+1616710834 source:f:\project\chessup-master-demo1\chessupdemo1\pawn.cpp
 	"Pawn.h"
 
-1616593090 f:\project\chessup-master-demo1\chessupdemo1\pawn.h
+1616542690 f:\project\chessup-master-demo1\chessupdemo1\pawn.h
 	"Piece.h"
 
