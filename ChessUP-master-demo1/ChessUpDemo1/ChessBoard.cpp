@@ -46,6 +46,9 @@ ChessBoard::ChessBoard()
 
     focus_ = {-1, -1};
     focusedPiece_ = nullptr;
+    // Set piece turn
+    pieceTurn_ = true;
+
 }
 
 ChessBoard::~ChessBoard()
@@ -343,7 +346,9 @@ bool ChessBoard::checkMovement(States* states)
     {
         // Check focused piece can move or not
         if(focusedPiece_->getName() != PieceName::EMPTY)
-            move = states->isMove(focusedPiece_, focus_.x, focus_.y);
+        {
+            move = states->isMove(focusedPiece_, pieceTurn_, focus_.x, focus_.y);
+        }
     }
     return move;
 }

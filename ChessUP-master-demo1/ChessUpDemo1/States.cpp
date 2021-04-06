@@ -8,9 +8,6 @@
 
 States::States()
 {
-    // Set piece turn
-    pieceTurn_ = true;
-
     // King can castling and undo move
     for(int i = 0; i < 4; i++)
     {
@@ -160,7 +157,7 @@ bool States::isPositionValid(Piece* piece, int x_pos, int y_pos)
     return false;
 }
 
-bool States::isMove(Piece* piece, int x_pos, int y_pos)
+bool States::isMove(Piece* piece, bool turn, int x_pos, int y_pos)
 {
     PieceStatus is_In_The_Spot = isInTheSpot(piece, x_pos, y_pos);
     bool color = piece->getColor();
@@ -169,7 +166,7 @@ bool States::isMove(Piece* piece, int x_pos, int y_pos)
     setPawnEnemies(true, piece, -1, -1);
 
     if(isPositionValid(piece, x_pos, y_pos) && isInTheWay(piece, x_pos, y_pos) == PieceStatus::EMPTY &&
-       is_In_The_Spot != PieceStatus::ALLY && pieceTurn_ == color)
+       is_In_The_Spot != PieceStatus::ALLY && turn == color)
     {
         // Remove the pawn's enemy
         setPawnEnemies(false, piece, -1, -1);
@@ -265,7 +262,7 @@ bool States::isMove(Piece* piece, int x_pos, int y_pos)
             pawnTransform(piece, x_pos, y_pos);
         }
 
-        pieceTurn_ = !pieceTurn_;
+        //pieceTurn_ = !pieceTurn_;
         return true;
     }
     // Remove the pawn's enemy
@@ -363,11 +360,9 @@ void States::undoMove()
         aux[index]->reviveFromDead();
 
     aux[index]->setPosition(x_oldPos, y_oldPos);
-    setPieceTurn(!getPieceTurn());
 
     if(x_newPos == -1 && y_newPos == -1)
     {
-        setPieceTurn(!getPieceTurn());
         undoMove();
     }
 }
@@ -482,25 +477,21 @@ GameResult States::checkWhoWon()
 
 int States::valueMove()
 {
-    Piece **aux1;
     int value = 0;
 
     for(int i = 0; i < 16; i++)
     {
-        aux1 = whitePieces_;
-        for(int j = 0; j < 2; j++)
-        {
-            if(aux1[i]->getPositionX() != -1 && aux1[i]->getPositionY() != -1)
-                value += aux1[i]->getPieceValue();
-            aux1 = blackPieces_;
-        }
+        if(whitePieces_[i]->getPositionX() != -1 && whitePieces_[i]->getPositionY() != -1)
+            value += whitePieces_[i]->getPieceValue();
+        if(blackPieces_[i]->getPositionX() != -1 && blackPieces_[i]->getPositionY() != -1)
+            value -= blackPieces_[i]->getPieceValue();
     }
     return value;
 }
 
 int States::Alpha_Beta(int depth, bool color, int alpha, int beta)
 {
-    Piece **aux1;
+    Piece **aux;
     int bestMove = 0;
 
     if(depth == 0)
@@ -508,23 +499,23 @@ int States::Alpha_Beta(int depth, bool color, int alpha, int beta)
 
     if(color)
     {
-        aux1 = whitePieces_;
-        bestMove = 10000; // Gia tri ban dau
+        aux = whitePieces_;
+        bestMove = -10000; // Gia tri ban dau
         for(int i = 0; i < 16; i++)
         {
-            if(aux1[i]->getPositionX() == -1 || aux1[i]->getPositionY() == -1)
+            if(aux[i]->getPositionX() == -1 || aux[i]->getPositionY() == -1)
                 continue;
 
             for(int ix = 0; ix < 8; ix++)
             {
                 for(int iy = 0; iy < 8; iy++)
                 {
-                    if(isMove(aux1[i], ix, iy))
+                    if(isMove(aux[i], color, ix, iy))
                     {
-                        bestMove = std::min(bestMove, Alpha_Beta(depth-1, color, alpha, beta));
+                        bestMove = std::max(bestMove, Alpha_Beta(depth-1, !color, alpha, beta));
                         // Undo
-                        //undoMove();
-                        alpha = std::min(alpha, bestMove);
+                        undoMove();
+                        alpha = std::max(alpha, bestMove);
                         if(beta <= alpha)
                         {
                             return bestMove;
@@ -537,23 +528,23 @@ int States::Alpha_Beta(int depth, bool color, int alpha, int beta)
     }
     else
     {
-        aux1 = blackPieces_;
-        bestMove = -10000; // Gia tri ban dau
+        aux = blackPieces_;
+        bestMove = 10000; // Gia tri ban dau
         for(int i = 0; i < 16; i++)
         {
-            if(aux1[i]->getPositionX() == -1 || aux1[i]->getPositionY() == -1)
+            if(aux[i]->getPositionX() == -1 || aux[i]->getPositionY() == -1)
                 continue;
 
             for(int ix = 0; ix < 8; ix++)
             {
                 for(int iy = 0; iy < 8; iy++)
                 {
-                    if(isMove(aux1[i], ix, iy))
+                    if(isMove(aux[i], color, ix, iy))
                     {
-                        bestMove = std::max(bestMove, Alpha_Beta(depth-1, color, alpha, beta));
+                        bestMove = std::min(bestMove, Alpha_Beta(depth-1, !color, alpha, beta));
                         // Undo
-                        //undoMove();
-                        beta = std::max(beta, bestMove);
+                        undoMove();
+                        beta = std::min(beta, bestMove);
                         if(beta <= alpha)
                         {
                             return bestMove;
@@ -568,32 +559,32 @@ int States::Alpha_Beta(int depth, bool color, int alpha, int beta)
 
 PieceValue States::getNextMove(bool color)
 {
-    Piece **aux1;
-    PieceValue oldPos, newPos, oldPosTemp, newPosTemp;
+    Piece **aux;
+    PieceValue newPos, newPosTemp;
     int minimax = 10000, minimaxTemp = 10000;
     int index = 0;
 
-    aux1 = blackPieces_;
+    aux = blackPieces_;
     for(int i = 0; i < 16; i++)
     {
-        if(aux1[i]->getPositionX() == -1 || aux1[i]->getPositionY() == -1)
+        if(aux[i]->getPositionX() == -1 || aux[i]->getPositionY() == -1)
             continue;
 
         for(int ix = 0; ix < 8; ix++)
         {
             for(int iy = 0; iy < 8; iy++)
             {
-                if(isMove(aux1[i], ix, iy))
+                if(isMove(aux[i], color, ix, iy))
                 {
-                    int alpha = 9999, beta = -9999;
+                    int alpha = -9999, beta = 9999;
                     int temp = Alpha_Beta(3, color, alpha, beta);
                     if(minimaxTemp > temp)
                     {
+                        minimaxTemp = temp;
                         newPosTemp.x_Value_ = ix;
                         newPosTemp.y_Value_ = iy;
-                        minimaxTemp = temp;
                     }
-                    //undoMove();
+                    undoMove();
                 }
             }
         }
@@ -601,6 +592,7 @@ PieceValue States::getNextMove(bool color)
         {
             minimax = minimaxTemp;
             index = i;
+            newPos = newPosTemp;
         }
     }
 
@@ -613,7 +605,7 @@ void States::computerMove(bool color)
     Piece **aux;
     PieceValue newPos;
     int index = 0;
-    int x_newPos = 0, y_newPos = 0, x_oldPos = 0, y_oldPos = 0;
+    int x_newPos = 0, y_newPos = 0;
 
     newPos = getNextMove(color);
     // Get index
@@ -625,7 +617,7 @@ void States::computerMove(bool color)
 
     color ? (aux = whitePieces_) : (aux = blackPieces_);
 
-    isMove(aux[index], x_newPos, y_newPos);
+    isMove(aux[index], color, x_newPos, y_newPos);
 }
 
 void States::saveGame(GameMode)

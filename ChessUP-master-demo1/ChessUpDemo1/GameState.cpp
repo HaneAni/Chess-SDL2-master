@@ -87,7 +87,7 @@ void GameState::renderPVP()
     States *states = new States();
     GameResult gameResult = GameResult::NOT_END;
 
-    states->setPieceTurn(board->choosePieceTurn(this, states));
+    board->setPieceTurn(board->choosePieceTurn(this, states));
 
     while (gameState_ == GameMode::GAME_MODE_PVP)
     {
@@ -125,33 +125,34 @@ void GameState::renderPVP()
                 if(board->checkMovement(states))
                 {
                     // If King move
-                    if(board->focusedPiece_ == states->blackPieces_[12])
+                    if(board->getFocusedPiece() == states->blackPieces_[12])
                     {
                         states->kingCastling[0] = false;
                         states->kingCastling[1] = false;
                     }
-                    else if(board->focusedPiece_ == states->whitePieces_[12])
+                    else if(board->getFocusedPiece() == states->whitePieces_[12])
                     {
                         states->kingCastling[2] = false;
                         states->kingCastling[3] = false;
                     }
 
                     // If Rook move or be eaten
-                    else if(board->focusedPiece_ == states->blackPieces_[15] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[15])
+                    else if(board->getFocusedPiece() == states->blackPieces_[15] || states->getPiece(board->getFocus().x, board->getFocus().y) == states->blackPieces_[15])
                         states->kingCastling[0] = false;
-                    else if(board->focusedPiece_ == states->blackPieces_[8] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[8])
+                    else if(board->getFocusedPiece() == states->blackPieces_[8] || states->getPiece(board->getFocus().x, board->getFocus().y) == states->blackPieces_[8])
                         states->kingCastling[1] = false;
-                    else if(board->focusedPiece_ == states->whitePieces_[8] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[8])
+                    else if(board->getFocusedPiece() == states->whitePieces_[8] || states->getPiece(board->getFocus().x, board->getFocus().y) == states->blackPieces_[8])
                         states->kingCastling[2] = false;
-                    else if(board->focusedPiece_ == states->whitePieces_[15] || states->getPiece(board->focus_.x, board->focus_.y) == states->blackPieces_[15])
+                    else if(board->getFocusedPiece() == states->whitePieces_[15] || states->getPiece(board->getFocus().x, board->getFocus().y) == states->blackPieces_[15])
                         states->kingCastling[3] = false;
 
-                    // If moved set focused piece as nullptr
-                    board->focusedPiece_ = nullptr;
+                    // If moved set focused piece as nullptr and set next turn
+                    board->setFocusedPiece(nullptr);
+                    board->setPieceTurn(!board->getPieceTurn());
                 }
                 else
                     // If there was no move, the focused piece is the current piece
-                    board->focusedPiece_ = states->getPiece(board->focus_.x, board->focus_.y);
+                    board->setFocusedPiece(states->getPiece(board->getFocus().x, board->getFocus().y));
             }
         }
         // If save
@@ -196,19 +197,19 @@ void GameState::renderPVP()
                                   board->indexToPixel(states->blackPieces_[12]->getPositionY(), false));
         }
         // Render focused piece
-        if(board->focusedPiece_ != nullptr)
+        if(board->getFocusedPiece() != nullptr)
         {
             // Render the piece selected
-            if((board->focusedPiece_->getName() != PieceName::EMPTY) && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+            if((board->getFocusedPiece()->getName() != PieceName::EMPTY) && (board->getFocusedPiece()->getColor() == board->getPieceTurn()))
             {
                 // Set color of piece selected
                 SDL_SetRenderDrawColor(g_Renderer, 255, 105, 180, 255);
                 // Render
-                board->renderOnePiece(board->indexToPixel(board->focus_.x, true), board->indexToPixel(board->focus_.y, false));
+                board->renderOnePiece(board->indexToPixel(board->getFocus().x, true), board->indexToPixel(board->getFocus().y, false));
             }
 
             // Render all possible moves of the focus piece
-            if(showHint && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+            if(showHint && (board->getFocusedPiece()->getColor() == board->getPieceTurn()))
                 board->renderPossibleMoves(states);
         }
         // Render all the pieces
@@ -250,19 +251,16 @@ void GameState::renderCPU()
 {
     bool showHint = true;
     int x = -1, y = -1;
+    // Set player turn is white piece
+    bool player, CPU;
 
     ChessBoard *board = new ChessBoard();
     States *states = new States();
     GameResult gameResult = GameResult::NOT_END;
 
-    // Set player turn is white piece
-    bool player = true;
-    bool CPU = false;
-
     // Player chooses his piece
     player = board->choosePieceTurn(this, states);
-    states->setPieceTurn(player);
-
+    board->setPieceTurn(player);
     // Player plays first
     CPU = false;
 
@@ -304,35 +302,34 @@ void GameState::renderCPU()
                     if(board->checkMovement(states))
                     {
                         // If King move
-                        if(board->focusedPiece_ == states->blackPieces_[12])
+                        if(board->getFocusedPiece() == states->blackPieces_[12])
                         {
                             states->kingCastling[0] = false;
                             states->kingCastling[1] = false;
                         }
-                        else if(board->focusedPiece_ == states->whitePieces_[12])
+                        else if(board->getFocusedPiece() == states->whitePieces_[12])
                         {
                             states->kingCastling[2] = false;
                             states->kingCastling[3] = false;
                         }
 
                         // If Rook move
-                        else if(board->focusedPiece_ == states->blackPieces_[15])
+                        else if(board->getFocusedPiece() == states->blackPieces_[15])
                             states->kingCastling[0] = false;
-                        else if(board->focusedPiece_ == states->blackPieces_[8])
+                        else if(board->getFocusedPiece() == states->blackPieces_[8])
                             states->kingCastling[1] = false;
-                        else if(board->focusedPiece_ == states->whitePieces_[8])
+                        else if(board->getFocusedPiece() == states->whitePieces_[8])
                             states->kingCastling[2] = false;
-                        else if(board->focusedPiece_ == states->whitePieces_[15])
-                            states->kingCastling[4] = false;
+                        else if(board->getFocusedPiece() == states->whitePieces_[15])
+                            states->kingCastling[3] = false;
 
-                        // If moved set focused piece as nullptr
-                        board->focusedPiece_ = nullptr;
+                        // If moved set focused piece as nullptr and set next turn
+                        board->setFocusedPiece(nullptr);
+                        CPU = true;
                     }
                     else
                         // If there was no move, the focused piece is the current piece
-                        board->focusedPiece_ = states->getPiece(board->focus_.x, board->focus_.y);
-
-                    CPU = true;
+                        board->setFocusedPiece(states->getPiece(board->getFocus().x, board->getFocus().y));
                 }
             }
         }
@@ -360,18 +357,6 @@ void GameState::renderCPU()
         // Render chess board
         board->renderChessBoard();
 
-        // Check game result
-        gameResult = states->checkWhoWon();
-        if(gameResult == GameResult::NOT_END)
-        {
-            // CPU play
-            if(CPU)
-            {
-                states->computerMove(!player);
-                CPU = false;
-            }
-        }
-
         // If white king was checked
         if(states->isCheckmate(true, states->whitePieces_[12]->getPositionX(), states->whitePieces_[12]->getPositionY()))
         {
@@ -391,25 +376,39 @@ void GameState::renderCPU()
                                   board->indexToPixel(states->blackPieces_[12]->getPositionY(), false));
         }
         // Render focused piece
-        if(board->focusedPiece_ != nullptr)
+        if(board->getFocusedPiece() != nullptr)
         {
             // Render the piece selected
-            if((board->focusedPiece_->getName() != PieceName::EMPTY) && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+            if((board->getFocusedPiece()->getName() != PieceName::EMPTY) && (board->getFocusedPiece()->getColor() == board->getPieceTurn()))
             {
                 // Set color of piece selected
                 SDL_SetRenderDrawColor(g_Renderer, 255, 105, 180, 255);
                 // Render
-                board->renderOnePiece(board->indexToPixel(board->focus_.x, true), board->indexToPixel(board->focus_.y, false));
+                board->renderOnePiece(board->indexToPixel(board->getFocus().x, true), board->indexToPixel(board->getFocus().y, false));
             }
 
             // Render all possible moves of the focus piece
-            if(showHint && (board->focusedPiece_->getColor() == states->getPieceTurn()))
+            if(showHint && (board->getFocusedPiece()->getColor() == board->getPieceTurn()))
                 board->renderPossibleMoves(states);
         }
         // Render all the pieces
         board->renderAllPieces(states);
 
-        if(gameResult != GameResult::NOT_END)
+        // Update screen
+        updateScreen(g_Window, g_Renderer);
+
+        // Check game result
+        gameResult = states->checkWhoWon();
+        if(gameResult == GameResult::NOT_END)
+        {
+            // CPU play
+            if(CPU)
+            {
+                states->computerMove(!player);
+                CPU = false;
+            }
+        }
+        else
         {
             // Render endgame
             t_EndGame[(int) gameResult].render(board->getXboard(), board->getYboard(), BOARD_HEIGHT, BOARD_WIDTH);
@@ -431,9 +430,6 @@ void GameState::renderCPU()
             }
             break;
         }
-
-        // Update screen
-        updateScreen(g_Window, g_Renderer);
     }
     delete board;
     delete states;

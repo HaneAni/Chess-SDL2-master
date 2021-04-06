@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1617623463 source:f:\project\chessup-master-demo1\chessupdemo1\main.cpp
+1617680152 source:f:\project\chessup-master-demo1\chessupdemo1\main.cpp
 	"SDL_utils.h"
 	"common.h"
 	"ChessBoard.h"
@@ -420,7 +420,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616435260 f:\project\chessup-master-demo1\chessupdemo1\gamestate.h
+1617679612 f:\project\chessup-master-demo1\chessupdemo1\gamestate.h
 	"Texture.h"
 	"common.h"
 
@@ -430,20 +430,20 @@
 1616805476 source:f:\project\chessup-master-demo1\chessupdemo1\piece.cpp
 	"Piece.h"
 
-1617621881 source:f:\project\chessup-master-demo1\chessupdemo1\gamestate.cpp
+1617680032 source:f:\project\chessup-master-demo1\chessupdemo1\gamestate.cpp
 	"GameState.h"
 	"ChessBoard.h"
 	"Piece.h"
 	"States.h"
 
-1616970378 f:\project\chessup-master-demo1\chessupdemo1\chessboard.h
+1617679755 f:\project\chessup-master-demo1\chessupdemo1\chessboard.h
 	"SDL_utils.h"
 	"Texture.h"
 	"Piece.h"
 	"States.h"
 	"common.h"
 
-1617620940 f:\project\chessup-master-demo1\chessupdemo1\states.h
+1617679612 f:\project\chessup-master-demo1\chessupdemo1\states.h
 	"Piece.h"
 	"GameState.h"
 	<algorithm>
@@ -452,7 +452,7 @@
 1616453950 source:f:\project\chessup-master-demo1\chessupdemo1\menu.cpp
 	"Menu.h"
 
-1617621003 source:f:\project\chessup-master-demo1\chessupdemo1\states.cpp
+1617680010 source:f:\project\chessup-master-demo1\chessupdemo1\states.cpp
 	"States.h"
 	"King.h"
 	"Queen.h"
@@ -461,7 +461,7 @@
 	"Rook.h"
 	"Pawn.h"
 
-1617595460 source:f:\project\chessup-master-demo1\chessupdemo1\chessboard.cpp
+1617681597 source:f:\project\chessup-master-demo1\chessupdemo1\chessboard.cpp
 	"ChessBoard.h"
 	"GameState.h"
 	"States.h"
@@ -480,7 +480,7 @@
 1615235668 f:\project\chessup-master-demo1\chessupdemo1\bishop.h
 	"Piece.h"
 
-1616805446 source:f:\project\chessup-master-demo1\chessupdemo1\king.cpp
+1617682305 source:f:\project\chessup-master-demo1\chessupdemo1\king.cpp
 	"King.h"
 
 1616805448 f:\project\chessup-master-demo1\chessupdemo1\king.h

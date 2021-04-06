@@ -26,6 +26,7 @@ public:
     GameState();
     ~GameState();
 
+    // Pause = true
     int isPause;
 
     void startGameState(GameMode playMode);

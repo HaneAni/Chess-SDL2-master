@@ -46,7 +46,7 @@ public:
     // Check for valid position
     bool isPositionValid(Piece* , int, int);
     // Move the piece or eat a enemy piece if possible
-    bool isMove(Piece*, int, int);
+    bool isMove(Piece*, bool, int, int);
     // Undo movement
     void undoMove();
     // Check is checkmate or not
@@ -87,15 +87,8 @@ public:
     // Returns index of piece from x,y position (returns -1 if there is no piece in the position)
     int getPieceIndex(int, int);
 
-    // Set the turn of the piece to be played (for the Load function)
-    void setPieceTurn(bool pieceTurn) {this->pieceTurn_ = pieceTurn;}
-    // Get the turn of the piece to be played
-    bool getPieceTurn() {return pieceTurn_;}
-
 private:
     Piece* emptyPiece_ = new Piece();
-    // Check black turn (false) or white turn (true)
-    bool pieceTurn_;
 
     // Set the pawn's enemy
     void setPawnEnemies(bool, Piece*, int, int);

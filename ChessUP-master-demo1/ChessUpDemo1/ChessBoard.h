@@ -16,10 +16,6 @@ public:
 
     // Matrix of board
     SDL_Rect mBoard[8][8];
-    // Position clicked
-    SDL_Point focus_;
-    // Last piece clicked
-    Piece* focusedPiece_;
 
     bool init();
     bool loadImage();
@@ -54,11 +50,26 @@ public:
     // Set and get y position of the board
     void setYboard(int y) {x_board_ = y;}
     int getYboard() {return y_board_;}
+    // Set and get focused position
+    void setFocus(SDL_Point focus) {focus_ = focus;}
+    SDL_Point getFocus() {return focus_;}
+    // Set and get focused piece
+    void setFocusedPiece(Piece* focusedPiece) {focusedPiece_ = focusedPiece;}
+    Piece* getFocusedPiece() {return focusedPiece_;}
+    // Set and get piece turn
+    void setPieceTurn(bool pieceTurn) {this->pieceTurn_ = pieceTurn;}
+    bool getPieceTurn() {return pieceTurn_;}
 
 private:
     int x_board_;
     int y_board_;
 
+    // Clicked position
+    SDL_Point focus_;
+    // Last clicked piece
+    Piece* focusedPiece_;
+    // white turn (true) or black turn (false)
+    bool pieceTurn_;
 };
 
 
