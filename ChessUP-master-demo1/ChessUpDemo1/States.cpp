@@ -557,10 +557,10 @@ int States::Alpha_Beta(int depth, bool color, int alpha, int beta)
     }
 }
 
-PieceValue States::getNextMove(bool color)
+SDL_Point States::getNextMove(bool color)
 {
     Piece **aux;
-    PieceValue newPos, newPosTemp;
+    SDL_Point newPos, newPosTemp;
     int minimax = 10000, minimaxTemp = 10000;
     int index = 0;
 
@@ -581,8 +581,8 @@ PieceValue States::getNextMove(bool color)
                     if(minimaxTemp > temp)
                     {
                         minimaxTemp = temp;
-                        newPosTemp.x_Value_ = ix;
-                        newPosTemp.y_Value_ = iy;
+                        newPosTemp.x = ix;
+                        newPosTemp.y = iy;
                     }
                     undoMove();
                 }
@@ -603,7 +603,7 @@ PieceValue States::getNextMove(bool color)
 void States::computerMove(bool color)
 {
     Piece **aux;
-    PieceValue newPos;
+    SDL_Point newPos;
     int index = 0;
     int x_newPos = 0, y_newPos = 0;
 
@@ -612,8 +612,8 @@ void States::computerMove(bool color)
     index = index_stack.top();
     index_stack.pop();
     // Get new position
-    x_newPos = newPos.x_Value_;
-    y_newPos = newPos.y_Value_;
+    x_newPos = newPos.x;
+    y_newPos = newPos.y;
 
     color ? (aux = whitePieces_) : (aux = blackPieces_);
 

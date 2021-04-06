@@ -7,7 +7,7 @@ Knight::Knight(bool isWhite, int x_position, int y_position)
     this->x_Position_ = x_position;
     this->y_Position_ = y_position;
     isAlive_ = true;
-    pieceValue_ = 3;
+    pieceValue_ = 30;
 }
 
 Knight::~Knight()

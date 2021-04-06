@@ -10,12 +10,6 @@
 enum class PieceStatus {EMPTY, ENEMY, ALLY};
 enum class GameResult {WHITE_WINS, BLACK_WINS, DRAW, NOT_END};
 
-struct PieceValue
-{
-    int index = -1;
-    int x_Value_ = -1;
-    int y_Value_ = -1;
-};
 
 /**@brief Class that defines states for a part
 *
@@ -61,17 +55,12 @@ public:
     // Check the winner
     GameResult checkWhoWon();
 
-
-    // Vector that keeps the best moves of each piece:
-    PieceValue whiteVallues_[16];
-    PieceValue blackVallues_[16];
-
     // Return value of movement
     int valueMove();
     // Alpha beta algorithm
     int Alpha_Beta(int, bool, int, int);
     // Get the best move for computer
-    PieceValue getNextMove(bool);
+    SDL_Point getNextMove(bool);
     // Play computer move
     void computerMove(bool);
 

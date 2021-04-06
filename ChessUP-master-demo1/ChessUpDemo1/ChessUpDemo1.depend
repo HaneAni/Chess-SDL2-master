@@ -20,7 +20,7 @@
 	<iostream>
 	<SDL.h>
 
-1616856482 f:\project\chessup-master-demo1\chessupdemo1\common.h
+1617685551 f:\project\chessup-master-demo1\chessupdemo1\common.h
 	"Texture.h"
 	"Menu.h"
 	<stack>
@@ -430,7 +430,7 @@
 1616805476 source:f:\project\chessup-master-demo1\chessupdemo1\piece.cpp
 	"Piece.h"
 
-1617680032 source:f:\project\chessup-master-demo1\chessupdemo1\gamestate.cpp
+1617682523 source:f:\project\chessup-master-demo1\chessupdemo1\gamestate.cpp
 	"GameState.h"
 	"ChessBoard.h"
 	"Piece.h"
@@ -443,7 +443,7 @@
 	"States.h"
 	"common.h"
 
-1617679612 f:\project\chessup-master-demo1\chessupdemo1\states.h
+1617685481 f:\project\chessup-master-demo1\chessupdemo1\states.h
 	"Piece.h"
 	"GameState.h"
 	<algorithm>
@@ -452,7 +452,7 @@
 1616453950 source:f:\project\chessup-master-demo1\chessupdemo1\menu.cpp
 	"Menu.h"
 
-1617680010 source:f:\project\chessup-master-demo1\chessupdemo1\states.cpp
+1617685481 source:f:\project\chessup-master-demo1\chessupdemo1\states.cpp
 	"States.h"
 	"King.h"
 	"Queen.h"
@@ -468,13 +468,13 @@
 	"Piece.h"
 	"Pawn.h"
 
-1616710744 source:f:\project\chessup-master-demo1\chessupdemo1\rook.cpp
+1617684765 source:f:\project\chessup-master-demo1\chessupdemo1\rook.cpp
 	"Rook.h"
 
 1615235542 f:\project\chessup-master-demo1\chessupdemo1\rook.h
 	"Piece.h"
 
-1616710742 source:f:\project\chessup-master-demo1\chessupdemo1\bishop.cpp
+1617684738 source:f:\project\chessup-master-demo1\chessupdemo1\bishop.cpp
 	"Bishop.h"
 
 1615235668 f:\project\chessup-master-demo1\chessupdemo1\bishop.h
@@ -486,19 +486,19 @@
 1616805448 f:\project\chessup-master-demo1\chessupdemo1\king.h
 	"Piece.h"
 
-1616710744 source:f:\project\chessup-master-demo1\chessupdemo1\knight.cpp
+1617684744 source:f:\project\chessup-master-demo1\chessupdemo1\knight.cpp
 	"Knight.h"
 
 1615231036 f:\project\chessup-master-demo1\chessupdemo1\knight.h
 	"Piece.h"
 
-1616710744 source:f:\project\chessup-master-demo1\chessupdemo1\queen.cpp
+1617684760 source:f:\project\chessup-master-demo1\chessupdemo1\queen.cpp
 	"Queen.h"
 
 1615234918 f:\project\chessup-master-demo1\chessupdemo1\queen.h
 	"Piece.h"
 
-1616710834 source:f:\project\chessup-master-demo1\chessupdemo1\pawn.cpp
+1617684751 source:f:\project\chessup-master-demo1\chessupdemo1\pawn.cpp
 	"Pawn.h"
 
 1616542690 f:\project\chessup-master-demo1\chessupdemo1\pawn.h
