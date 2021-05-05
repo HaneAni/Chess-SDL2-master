@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Chessup-Master-Demo" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Chessup-Master-Demo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="../SDL2_lib/include/SDL2" />
+				</Compiler>
+				<Linker>
+					<Add option="-lmingw32" />
+					<Add option="-lSDL2main" />
+					<Add option="-lSDL2" />
+					<Add option="-lSDL2_image" />
+					<Add option="-lSDL2_ttf" />
+					<Add option="-lSDL2_mixer" />
+					<Add directory="../SDL2_lib/lib" />
+					<Add directory="../SDL2_lib/bin" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Chessup-Master-Demo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="../include/Bishop.h" />
+		<Unit filename="../include/Button.h" />
+		<Unit filename="../include/ChessBoard.h" />
+		<Unit filename="../include/GameState.h" />
+		<Unit filename="../include/King.h" />
+		<Unit filename="../include/Knight.h" />
+		<Unit filename="../include/Pawn.h" />
+		<Unit filename="../include/Piece.h" />
+		<Unit filename="../include/Queen.h" />
+		<Unit filename="../include/Rook.h" />
+		<Unit filename="../include/SDL_utils.h" />
+		<Unit filename="../include/States.h" />
+		<Unit filename="../include/Texture.h" />
+		<Unit filename="../include/common.h" />
+		<Unit filename="../src/Bishop.cpp" />
+		<Unit filename="../src/Button.cpp" />
+		<Unit filename="../src/ChessBoard.cpp" />
+		<Unit filename="../src/GameState.cpp" />
+		<Unit filename="../src/King.cpp" />
+		<Unit filename="../src/Knight.cpp" />
+		<Unit filename="../src/Pawn.cpp" />
+		<Unit filename="../src/Piece.cpp" />
+		<Unit filename="../src/Queen.cpp" />
+		<Unit filename="../src/Rook.cpp" />
+		<Unit filename="../src/SDL_utils.cpp" />
+		<Unit filename="../src/States.cpp" />
+		<Unit filename="../src/Texture.cpp" />
+		<Unit filename="../src/main.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
