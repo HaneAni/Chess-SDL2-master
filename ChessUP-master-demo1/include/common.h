@@ -75,6 +75,11 @@ static const char pawn_white[]   = {"../res/textures/Chessman1/White_pawn.png"};
 /// Fonts
 static const char text_fonts[]   = {"../res/fonts/cocogoose.ttf"};
 
+/// Save games
+static const char outputPVP[]   = {"../res/savegames/output_PVP.pgn"};
+static const char outputCPU[]   = {"../res/savegames/output_CPU.pgn"};
+static const char outputEDIT[]   = {"../res/savegames/output_EDIT.pgn"};
+
 
 /******** Global Variable ********/
 

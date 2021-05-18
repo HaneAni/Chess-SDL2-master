@@ -55,9 +55,6 @@ ChessBoard::ChessBoard()
 
     focus_ = {-1, -1};
     focusedPiece_ = nullptr;
-    // Set piece turn
-    pieceTurn_ = true;
-
 }
 
 ChessBoard::~ChessBoard()
@@ -395,7 +392,7 @@ bool ChessBoard::checkMovement(States* states)
         // Check focused piece can move or not
         if(focusedPiece_->getName() != PieceName::EMPTY)
         {
-            move = states->isMove(focusedPiece_, pieceTurn_, focus_.x, focus_.y);
+            move = states->isMove(focusedPiece_, states->getPieceTurn(), focus_.x, focus_.y);
         }
     }
     return move;
@@ -405,7 +402,7 @@ void ChessBoard::editBoard(GameState *gm, States* states)
 {
     bool done = false;
     states->killAllPieces();
-    int indexPiece = 1;
+    int indexPiece = 0;
     bool isWhite = false;
     int x = -1, y = -1;
 
@@ -416,38 +413,37 @@ void ChessBoard::editBoard(GameState *gm, States* states)
             if(e.type == SDL_QUIT)
             {
                 gm->setGameState(GameMode::GAME_MODE_QUIT);
+                done = true;
                 break;
             }
-            if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEMOTION)
+            else if(e.type == SDL_MOUSEMOTION)
             {
-                switch (e.type)
-                {
-                case SDL_MOUSEBUTTONDOWN:
-                    // Gets mouse position
-                    SDL_GetMouseState(&x, &y);
-                    // Updates the index of the focused matrix
-                    updateFocus((int) x, (int) y);
-                    if(isWhite)
-                        states->setPiece(states->whitePieces_[indexPiece], focus_.x, focus_.y);
-                    else
-                        states->setPiece(states->blackPieces_[indexPiece], focus_.x, focus_.y);
-                    break;
-                case SDL_MOUSEMOTION:
-                    SDL_GetMouseState(&x, &y);
-                    break;
-                default:
-                    break;
-                }
+                SDL_GetMouseState(&x, &y);
+            }
+            else if(e.type == SDL_MOUSEBUTTONDOWN)
+            {
+                // Gets mouse position
+                SDL_GetMouseState(&x, &y);
+                // Updates the index of the focused matrix
+                updateFocus((int) x, (int) y);
+                if(isWhite)
+                    states->setPiece(states->whitePieces_[indexPiece], focus_.x, focus_.y);
+                else
+                    states->setPiece(states->blackPieces_[indexPiece], focus_.x, focus_.y);
             }
             else if(e.type == SDL_KEYDOWN)
             {
-                switch (e.type)
+                switch (e.key.keysym.sym)
                 {
+                case SDLK_ESCAPE:
+                    gm->setGameState(GameMode::GAME_MODE_MAIN_MENU);
+                    done = true;
+                    break;
                 case SDLK_UP:
-                    isWhite = true;
+                    isWhite = !isWhite;
                     break;
                 case SDLK_DOWN:
-                    isWhite = false;
+                    isWhite = !isWhite;
                     break;
                 case SDLK_LEFT:
                     if(indexPiece > 0)
@@ -461,13 +457,14 @@ void ChessBoard::editBoard(GameState *gm, States* states)
                     else
                         indexPiece = 0;
                     break;
-                case SDLK_d:
+                case SDLK_RETURN:
                     done = true;
                     break;
                 default:
                     break;
                 }
             }
+
             // Clear screen
             SDL_SetRenderDrawColor(g_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(g_Renderer);
@@ -476,13 +473,13 @@ void ChessBoard::editBoard(GameState *gm, States* states)
             t_Background.renderBackground();
             // Render board
             renderChessBoard();
+            // Render piece on board
+            renderAllPieces(states);
 
             if(isWhite)
-                t_WhitePieces[(int) states->whitePieces_[indexPiece]->getName()].render(x, y);
+                t_WhitePieces[(int) states->whitePieces_[indexPiece]->getName()].render(x - CELL_SIZE/2, y - CELL_SIZE/2);
             else
-                t_BlackPieces[(int) states->blackPieces_[indexPiece]->getName()].render(x, y);
-
-            renderAllPieces(states);
+                t_BlackPieces[(int) states->blackPieces_[indexPiece]->getName()].render(x - CELL_SIZE/2, y - CELL_SIZE/2);
 
             // Update screen
             updateScreen(g_Window, g_Renderer);

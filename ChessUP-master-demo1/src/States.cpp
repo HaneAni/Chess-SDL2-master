@@ -1,3 +1,4 @@
+#include "../include/Piece.h"
 #include "../include/States.h"
 #include "../include/King.h"
 #include "../include/Queen.h"
@@ -6,8 +7,14 @@
 #include "../include/Bishop.h"
 #include "../include/Pawn.h"
 
+#include <algorithm>
+#include <bits/stdc++.h>
+
 States::States()
 {
+    // Set piece turn
+    pieceTurn_ = true;
+
     // King can castling and undo move
     for(int i = 0; i < 4; i++)
     {
@@ -620,14 +627,116 @@ void States::computerMove(bool color)
     isMove(aux[index], color, x_newPos, y_newPos);
 }
 
-void States::saveGame(GameMode)
+void States::saveGame(GameMode mode)
 {
-    /******************************************************************* todo *******************************************************************/
+    FILE *fp = NULL;
+    Piece **aux;
+    int i, j;
+    char print;
+
+    if(mode == GameMode::GAME_MODE_PVP)
+        fp = fopen(outputPVP,"w");
+    if(mode == GameMode::GAME_MODE_CPU)
+        fp = fopen(outputCPU,"w");
+    if(mode == GameMode::GAME_MODE_EDIT)
+        fp = fopen(outputEDIT,"w");
+
+    if(fp == NULL)
+        return;
+
+    fprintf(fp, "%s", "[Piece Turn]:");
+    fprintf(fp, "%c%c", pieceTurn_ ? 'w' : 'b', '\n');
+    fprintf(fp, "%s", "[White Piece Board]:");
+    aux = whitePieces_;
+    for(j = 0; j < 2; j++)
+    {
+        for(i = 0; i < 16; i++)
+        {
+            if(aux[i]->getIsAlive())
+            {
+                switch (aux[i]->getName())
+                {
+                case PieceName::PAWN:
+                    print = 'P';
+                    break;
+                case PieceName::BISHOP:
+                    print = 'B';
+                    break;
+                case PieceName::ROOK:
+                    print = 'R';
+                    break;
+                case PieceName::KNIGHT:
+                    print = 'N';
+                    break;
+                case PieceName::QUEEN:
+                    print = 'Q';
+                    break;
+                case PieceName::KING:
+                    print = 'K';
+                    break;
+                default:
+                    break;
+                }
+            fprintf(fp, "%c,%d,%d,%c", print, aux[i]->getPositionX(), aux[i]->getPositionY(), '|');
+            }
+            else
+            {
+                fprintf(fp, "%c%c", 'x', '|');
+            }
+        }
+        if(j == 0)
+        {
+            fprintf(fp, "%c", '\n');
+            fprintf(fp, "%s", "[Black Piece Board]:");
+            aux = blackPieces_;
+        }
+    }
+    fclose(fp);
 }
 
-void States::loadGame(GameMode)
+void States::loadGame(GameMode mode)
 {
-    /******************************************************************* todo *******************************************************************/
+    FILE *fp = NULL;
+    Piece **aux;
+    int i, j;
+    char read[86];
+
+    if(mode == GameMode::GAME_MODE_PVP)
+        fp = fopen(outputPVP,"r");
+    if(mode == GameMode::GAME_MODE_CPU)
+        fp = fopen(outputCPU,"r");
+    if(mode == GameMode::GAME_MODE_EDIT)
+        fp = fopen(outputEDIT,"r");
+
+    if(fp == NULL)
+        return;
+
+    fscanf(fp, "%86[^\n].", read);
+
+    read[13] == 'w' ? pieceTurn_ = true : pieceTurn_ = false;
+
+    aux = whitePieces_;
+    for(j = 0; j < 2; j++)
+    {
+        fscanf(fp, "%86[^:].", read);
+        read[0] = fgetc(fp);
+
+        for(i = 0; i < 16; i++)
+        {
+            fscanf(fp, "%86[^|].", read);
+            if(read[0] != 'x')
+            {
+                aux[i]->reviveFromDead();
+                aux[i]->setPosition(atoi(&read[2]), atoi(&read[4]));
+            }
+            else
+                aux[i]->setDead();
+
+            read[0] = fgetc(fp);
+        }
+        aux = blackPieces_;
+    }
+    fclose(fp);
 }
 
 bool States::setPiece(Piece* piece, int x_pos, int y_pos)

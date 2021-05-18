@@ -76,8 +76,14 @@ public:
     // Returns index of piece from x,y position (returns -1 if there is no piece in the position)
     int getPieceIndex(int, int);
 
+    // Set and get piece turn
+    void setPieceTurn(bool pieceTurn) {this->pieceTurn_ = pieceTurn;}
+    bool getPieceTurn() {return pieceTurn_;}
+
 private:
     Piece* emptyPiece_ = new Piece();
+    // white turn (true) or black turn (false)
+    bool pieceTurn_;
 
     // Set the pawn's enemy
     void setPawnEnemies(bool, Piece*, int, int);

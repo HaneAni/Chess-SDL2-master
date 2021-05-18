@@ -9,7 +9,7 @@ enum class GameMode
 {
     GAME_MODE_PVP,
     GAME_MODE_CPU,
-    GAME_MODE_CHESSUP,
+    GAME_MODE_EDIT,
     GAME_MODE_QUIT,
     GAME_MODE_CONTINUE,
     GAME_MODE_SAVE,
@@ -41,7 +41,7 @@ private:
     void renderMainMenu();
     void renderPVP();
     void renderCPU();
-    void renderChessupMode();
+    void renderEditMode();
     void renderPauseMenu();
 
 };

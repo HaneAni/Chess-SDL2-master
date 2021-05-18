@@ -98,8 +98,8 @@ void Button::handleEvent(SDL_Event* e, GameState* gm)
                 case ButtonSprite::BUTTON_SPRITE_CPU :
                     gm->setGameState(GameMode::GAME_MODE_CPU);
                     break;
-                case ButtonSprite::BUTTON_SPRITE_CHESSUP :
-                    gm->setGameState(GameMode::GAME_MODE_CHESSUP);
+                case ButtonSprite::BUTTON_SPRITE_EDIT :
+                    gm->setGameState(GameMode::GAME_MODE_EDIT);
                     break;
                 case ButtonSprite::BUTTON_SPRITE_QUIT :
                     gm->setGameState(GameMode::GAME_MODE_QUIT);

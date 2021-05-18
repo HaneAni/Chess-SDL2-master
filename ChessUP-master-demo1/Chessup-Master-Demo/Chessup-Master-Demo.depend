@@ -8,17 +8,17 @@
 1616805950 f:\project\chessup-master-demo1\include\piece.h
 	<string>
 
-1619598374 source:f:\project\chessup-master-demo1\src\gamestate.cpp
+1621313834 source:f:\project\chessup-master-demo1\src\gamestate.cpp
 	"../include/GameState.h"
 	"../include/ChessBoard.h"
 	"../include/Piece.h"
 	"../include/States.h"
 
-1618377222 f:\project\chessup-master-demo1\include\gamestate.h
+1620914628 f:\project\chessup-master-demo1\include\gamestate.h
 	"../include/common.h"
 	"../include/Texture.h"
 
-1619590552 f:\project\chessup-master-demo1\include\common.h
+1621321432 f:\project\chessup-master-demo1\include\common.h
 	"../include/Texture.h"
 	"../include/Button.h"
 	<stack>
@@ -424,21 +424,21 @@
 	<iostream>
 	<SDL.h>
 
-1619591594 f:\project\chessup-master-demo1\include\button.h
+1620915713 f:\project\chessup-master-demo1\include\button.h
 	"../include/common.h"
 	"../include/GameState.h"
 	"../include/Piece.h"
 	<SDL_ttf.h>
 	<string>
 
-1618377222 f:\project\chessup-master-demo1\include\chessboard.h
+1621246638 f:\project\chessup-master-demo1\include\chessboard.h
 	"../include/SDL_utils.h"
 	"../include/common.h"
 	"../include/Texture.h"
 	"../include/Piece.h"
 	"../include/States.h"
 
-1618377222 f:\project\chessup-master-demo1\include\states.h
+1621246638 f:\project\chessup-master-demo1\include\states.h
 	"../include/Piece.h"
 	"../include/GameState.h"
 	<algorithm>
@@ -488,7 +488,8 @@
 1618377222 f:\project\chessup-master-demo1\include\rook.h
 	"../include/Piece.h"
 
-1618377273 source:f:\project\chessup-master-demo1\src\states.cpp
+1621314381 source:f:\project\chessup-master-demo1\src\states.cpp
+	"../include/Piece.h"
 	"../include/States.h"
 	"../include/King.h"
 	"../include/Queen.h"
@@ -496,11 +497,13 @@
 	"../include/Knight.h"
 	"../include/Bishop.h"
 	"../include/Pawn.h"
+	<algorithm>
+	<bits/stdc++.h>
 
-1619591594 source:f:\project\chessup-master-demo1\src\button.cpp
+1620915678 source:f:\project\chessup-master-demo1\src\button.cpp
 	"../include/Button.h"
 
-1619588473 source:f:\project\chessup-master-demo1\src\chessboard.cpp
+1621314791 source:f:\project\chessup-master-demo1\src\chessboard.cpp
 	"../include/ChessBoard.h"
 	"../include/GameState.h"
 	"../include/Piece.h"

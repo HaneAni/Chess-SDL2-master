@@ -1,8 +1,7 @@
-Trương Minh Đức - 20020396
-Trường Đại học Công Nghệ - ĐHQGHN
+**Trương Minh Đức - 20020396**
+**Trường Đại học Công Nghệ - ĐHQGHN**
 
 CHESS by HaneAni
-
 
 A simple Chess implementation I made for an university project.
 I used SDL2 and C++.
@@ -32,9 +31,9 @@ Check the correct package name of the SDL libraries. On arch based distros the p
 
 **Compile and run**
 	
-* go to the Chessup-Master-Demo directory.
-* run Chessup-Master-Demo.exe
-* you can compile and run the tests project located at Chessup-Master-Demo/Chessup-Master-Demo.cbp.
+* Go to the Chessup-Master-Demo directory.
+* Run Chess.exe
+* You can compile and run the tests project located at Chessup-Master-Demo/Chessup-Master-Demo.cbp.
 	
 **Ingame commands:**
 
@@ -42,6 +41,7 @@ Check the correct package name of the SDL libraries. On arch based distros the p
 * z -> undo movement.
 
 PVP mode:
+* Chess move
 * King castling.
 * Pawn transform.
 
@@ -49,10 +49,10 @@ CPU mode:
 * Alpha-beta algorithm.
 
 Edit mode:
-* left and right -> select the piece.
-* up and down -> select the color.
-* click -> place the piece.
-* enter -> done, start a pvp mode after editing the piece positions.
+* Left and right -> select the piece.
+* Up and down -> select the color.
+* Click -> place the piece.
+* Enter -> done, start a pvp mode after editing the piece positions.
     
 Save: Save the current chess board state.
 

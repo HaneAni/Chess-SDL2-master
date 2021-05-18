@@ -56,9 +56,6 @@ public:
     // Set and get focused piece
     void setFocusedPiece(Piece* focusedPiece) {focusedPiece_ = focusedPiece;}
     Piece* getFocusedPiece() {return focusedPiece_;}
-    // Set and get piece turn
-    void setPieceTurn(bool pieceTurn) {this->pieceTurn_ = pieceTurn;}
-    bool getPieceTurn() {return pieceTurn_;}
 
 private:
     int x_board_;
@@ -68,8 +65,6 @@ private:
     SDL_Point focus_;
     // Last clicked piece
     Piece* focusedPiece_;
-    // white turn (true) or black turn (false)
-    bool pieceTurn_;
 };
 
 
