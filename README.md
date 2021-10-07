@@ -5,7 +5,7 @@ CHESS by HaneAni
 
 A simple Chess implementation I made for an university project.
 I used SDL2 and C++.
-The original project is here: https://github.com/HaneAni/Chess-SDL2-master
+The original project is here: https://github.com/minhduc-mll/Chess-SDL2-master
 
 -----------
 
